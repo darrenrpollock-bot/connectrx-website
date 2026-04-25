@@ -704,6 +704,10 @@
       transition: color 0.2s;
     }
     .footer-links a:hover { color: rgba(250,248,244,0.9); }
+    .footer-articles li a { display: flex; flex-direction: column; gap: 3px; }
+    .footer-article-title { font-size: 13px; color: rgba(250,248,244,0.7); line-height: 1.4; }
+    .footer-article-meta { font-size: 11.5px; color: rgba(250,248,244,0.35); }
+    .footer-articles li a:hover .footer-article-title { color: rgba(250,248,244,0.95); }
     .footer-bottom {
       border-top: 1px solid rgba(250,248,244,0.08);
       padding-top: 28px;
@@ -1202,6 +1206,10 @@
           <li><a href="#">Book a Demo</a></li>
         </ul>
       </div>
+      <div>
+        <div class="footer-col-title">Latest Articles</div>
+        <ul class="footer-links footer-articles" id="footer-articles"></ul>
+      </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 ConnectRx. All rights reserved.</span>
@@ -1593,6 +1601,19 @@
     setTimeout(() => {
       document.querySelectorAll('.hero .fade-up').forEach(el => el.classList.add('visible'));
     }, 80);
+  </script>
+
+  <script src="articles-data.js"></script>
+  <script>
+    (function() {
+      const ul = document.getElementById('footer-articles');
+      if (!ul || !window.ARTICLES_DATA) return;
+      window.ARTICLES_DATA.slice(0, 3).forEach(function(a) {
+        const li = document.createElement('li');
+        li.innerHTML = '<a href="' + a.file + '"><span class="footer-article-title">' + a.title + '</span><span class="footer-article-meta">' + a.date + ' · ' + a.readTime + '</span></a>';
+        ul.appendChild(li);
+      });
+    })();
   </script>
 </body>
 </html>
