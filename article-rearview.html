@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your CRM Is a Rearview Mirror — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-light: #F2EBE0;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif;
+      --font-ui: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 68px;
+      background: rgba(250,248,244,0.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-logo-wrap { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { color: var(--ink); border-bottom: 1.5px solid var(--green); padding-bottom: 2px; }
+    .nav-cta { padding: 9px 22px; border-radius: 100px; border: none; font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; background: var(--green); color: #fff; transition: background 0.2s; }
+    .nav-cta:hover { background: #7a5c38; }
+
+    .article-header { padding: 130px 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-light); margin-bottom: 32px; transition: color 0.18s; }
+    .back-link:hover { color: var(--ink); }
+    .article-tag { font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+    .article-title { font-family: var(--font-head); font-size: clamp(32px, 4vw, 54px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px; text-wrap: balance; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-light); padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .article-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+
+    .article-hero { margin: 0 auto; max-width: 1100px; padding: 0 80px 56px; }
+    .article-hero-img { width: 100%; border-radius: 16px; overflow: hidden; background: #EDE0CF; }
+
+    .article-body-wrap { max-width: 720px; margin: 0 auto; padding: 0 80px 100px; }
+    .article-body p { font-size: 17px; line-height: 1.8; color: var(--ink-mid); margin-bottom: 24px; }
+    .article-body h2 { font-family: var(--font-head); font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--ink); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article-body h3 { font-family: var(--font-ui); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; color: var(--ink); margin: 32px 0 12px; text-transform: uppercase; font-size: 13px; letter-spacing: 0.08em; }
+    .article-body strong { color: var(--ink); font-weight: 600; }
+    .article-body ul { margin: 0 0 24px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .article-body ul li { padding-left: 20px; position: relative; font-size: 17px; line-height: 1.75; color: var(--ink-mid); }
+    .article-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--green); font-weight: 300; }
+    .article-pullquote { border-left: 3px solid var(--green); padding: 4px 0 4px 28px; margin: 40px 0; }
+    .article-pullquote p { font-family: var(--font-head); font-size: 24px; line-height: 1.45; color: var(--ink); font-weight: 400; margin: 0; }
+
+    .article-cta-strip { background: var(--ink); border-radius: 16px; padding: 48px; margin: 56px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .article-cta-strip h3 { font-family: var(--font-head); font-size: 26px; color: #F0EDE6; font-weight: 400; line-height: 1.25; }
+    .article-cta-strip p { font-size: 14px; color: rgba(240,237,230,0.55); margin-top: 8px; line-height: 1.6; }
+    .btn-demo { padding: 14px 28px; border-radius: 100px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; font-family: var(--font-body); border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .btn-demo:hover { background: #7a5c38; }
+
+    footer { background: var(--ink); color: rgba(250,248,244,0.5); padding: 36px 80px; margin-top: 0; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; flex-wrap: wrap; gap: 12px; }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .article-header, .article-hero, .article-body-wrap { padding-left: 24px; padding-right: 24px; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap"><img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx"/></div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+  </nav>
+
+  <div class="article-header">
+    <a href="articles.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Articles
+    </a>
+    <div class="article-tag">Sales Strategy</div>
+    <h1 class="article-title">Your CRM Is a Rearview Mirror.<br>Here's What a Windshield Looks Like.</h1>
+    <div class="article-meta">
+      <span>ConnectRx Editorial</span>
+      <span class="article-meta-dot"></span>
+      <span>12 min read</span>
+      <span class="article-meta-dot"></span>
+      <span>April 2026</span>
+    </div>
+  </div>
+
+  <div class="article-hero">
+    <div class="article-hero-img">
+      <svg viewBox="0 0 1020 420" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <rect width="1020" height="420" fill="#EDE0CF"/>
+        <circle cx="300" cy="210" r="130" fill="rgba(139,107,69,0.07)" stroke="rgba(139,107,69,0.12)" stroke-width="1"/>
+        <circle cx="300" cy="210" r="90" fill="rgba(139,107,69,0.06)" stroke="rgba(139,107,69,0.10)" stroke-width="1"/>
+        <circle cx="300" cy="210" r="50" fill="rgba(139,107,69,0.08)" stroke="rgba(139,107,69,0.18)" stroke-width="1.5"/>
+        <circle cx="300" cy="210" r="10" fill="rgba(139,107,69,0.7)"/>
+        <!-- Satellite nodes -->
+        <circle cx="440" cy="140" r="8" fill="rgba(139,107,69,0.55)"/>
+        <circle cx="460" cy="270" r="6" fill="rgba(139,107,69,0.45)"/>
+        <circle cx="200" cy="130" r="6" fill="rgba(139,107,69,0.4)"/>
+        <circle cx="180" cy="295" r="5" fill="rgba(139,107,69,0.35)"/>
+        <circle cx="380" cy="320" r="5" fill="rgba(139,107,69,0.3)"/>
+        <line x1="300" y1="210" x2="440" y2="140" stroke="rgba(139,107,69,0.2)" stroke-width="1.5"/>
+        <line x1="300" y1="210" x2="460" y2="270" stroke="rgba(139,107,69,0.18)" stroke-width="1.5"/>
+        <line x1="300" y1="210" x2="200" y2="130" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+        <line x1="300" y1="210" x2="180" y2="295" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+        <line x1="300" y1="210" x2="380" y2="320" stroke="rgba(139,107,69,0.12)" stroke-width="1"/>
+        <line x1="440" y1="140" x2="460" y2="270" stroke="rgba(139,107,69,0.10)" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- Right side: forward arrow -->
+        <rect x="620" y="170" width="280" height="80" rx="12" fill="rgba(139,107,69,0.08)" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+        <rect x="640" y="190" width="100" height="8" rx="4" fill="rgba(139,107,69,0.25)"/>
+        <rect x="640" y="206" width="160" height="6" rx="3" fill="rgba(139,107,69,0.15)"/>
+        <rect x="640" y="220" width="120" height="6" rx="3" fill="rgba(139,107,69,0.12)"/>
+        <path d="M800 210 L840 210" stroke="rgba(139,107,69,0.5)" stroke-width="2" fill="none"/>
+        <path d="M836 205 L842 210 L836 215" stroke="rgba(139,107,69,0.5)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="40" y="395" font-family="DM Serif Display,serif" font-size="14" fill="rgba(139,107,69,0.4)">ConnectRx Insights</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="article-body-wrap">
+    <div class="article-body">
+
+      <p>Walk into any sales leadership meeting at a complex B2B company and ask what their CRM tells them. You'll hear the same answers: visit counts, call notes, opportunity stages, last contact dates. Useful. Accurate. Completely backwards-looking.</p>
+
+      <p>The dirty secret of enterprise CRM is that almost all of it is fundamentally a recording system. It documents the past with impressive fidelity and does almost nothing to shape the future. Salesforce records that your rep visited Dr Chen on Tuesday. It does not ask whether that visit had a plan behind it, whether the right questions were asked, or what the next move should be.</p>
+
+      <p>This would be fine if complex sales were a high-volume, transactional game. But it isn't. It's a relationship-intensive, long-cycle, multi-stakeholder environment where the difference between a rep who wins and a rep who loses often comes down to preparation, strategic clarity, and the quality of the questions they ask in front of a customer. A database of past visits doesn't build any of those things.</p>
+
+      <div class="article-pullquote">
+        <p>"The best reps don't win because they log more visits. They win because they walk in with a plan — and the questions to execute it."</p>
+      </div>
+
+      <h2>The Reactive Trap</h2>
+
+      <p>Most commercial teams in our industry have fallen into what we call the reactive trap. The CRM becomes a compliance tool — something reps fill in to satisfy management, with data that management uses to build retrospective reports. Strategy is something that happens in a quarterly planning day, gets captured in a PowerPoint, and is then functionally invisible until the next planning day rolls around.</p>
+
+      <p>In between, reps operate largely on instinct. Experienced ones do it well. Newer reps flounder. And when a senior rep leaves — and they always eventually leave — the institutional knowledge they carried disappears with them.</p>
+
+      <p>The reactive trap isn't a people problem. It's a tooling problem. When your system is built to record the past, your team organises itself around the past. The question "what happened?" crowds out the far more valuable question: "what are we going to do about it?"</p>
+
+      <h2>What Forward-Looking Actually Means</h2>
+
+      <p>A genuinely proactive commercial tool does several things differently. First, it starts with strategy, not with a blank call note field. Before a rep visits a customer, the platform should already have context: who this person is, how they're currently segmented, what objectives have been set around them, and what questions or tactics have been recommended to move those objectives forward.</p>
+
+      <p>Second, it makes that strategic context visual and accessible — not buried in a list of text fields that no rep wants to scroll through between car park and waiting room. Visual segmentation maps, clear OKR scores, colour-coded account health indicators: these are the difference between a tool reps actually use and one they fill in under duress.</p>
+
+      <p>Third, it uses intelligence to augment the rep's judgement without replacing it. This is a critical distinction. AI that tries to automate sales decisions is solving the wrong problem. Sales in this industry is deeply human. What AI can do — usefully, powerfully — is surface the right questions, flag when an account is drifting, and suggest the next best action based on what's actually worked. The rep decides. The tool informs.</p>
+
+      <h2>The Territory View vs The National View</h2>
+
+      <p>The rearview problem compounds as you move up the management chain. A rep at least has their own territory in their head. A national sales manager trying to synthesise intelligence from twenty reps across five states is working almost entirely blind. They get the reports, but reports are always a step behind reality.</p>
+
+      <p>A forward-looking platform solves this at every level simultaneously. Reps see their accounts with clarity and a plan. Managers see territory-level patterns in real time. National leadership sees the full strategic picture — segmentation health, OKR completion rates, where the pipeline is genuinely strong versus where it looks good on paper.</p>
+
+      <ul>
+        <li>Territory-level: individual rep sees their customer map, planned visits, active objectives</li>
+        <li>Regional level: manager can filter accounts by segment, specialty, performance, identify coaching opportunities</li>
+        <li>National level: leadership sees patterns across divisions, geographies, and product lines simultaneously</li>
+      </ul>
+
+      <h2>The Engagement Problem</h2>
+
+      <p>There is one more dimension that rarely gets discussed in polite CRM company: most reps hate using them. The data quality in most CRM systems is poor not because reps are lazy, but because the tools ask them to do administrative work that feels disconnected from the job they actually care about — selling.</p>
+
+      <p>GekoConnect was designed with this problem front of mind. The psychology of colour, gamified OKR progress, visible achievement — these aren't cosmetic choices. They're deliberate design decisions based on what we know about how humans engage with goal-directed systems. When a rep can see their OKR score improving in real time, when the platform celebrates a strategic milestone, when the colour of an account card changes to reflect progress — the tool starts to feel less like compliance and more like momentum.</p>
+
+      <p>That shift in perception changes behaviour. And changed behaviour changes outcomes.</p>
+
+      <h2>The Right Question</h2>
+
+      <p>The question isn't whether your current CRM records the past accurately. It probably does. The question is whether it helps your team build a better future — account by account, visit by visit, question by question.</p>
+
+      <p>If the answer is no, the problem isn't your team. It's the mirror they're being asked to drive with.</p>
+
+    </div>
+
+    <div class="article-cta-strip">
+      <div>
+        <h3>See what a forward-looking platform looks like in practice.</h3>
+        <p>Book a demo with the ConnectRx team and we'll walk you through GekoConnect and GekoPulse.</p>
+      </div>
+      <button class="btn-demo" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2026 ConnectRx · connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

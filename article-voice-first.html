@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice-First Field Capture — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-light: #F2EBE0;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif; --font-ui: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(250,248,244,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-logo-wrap { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { color: var(--ink); border-bottom: 1.5px solid var(--green); padding-bottom: 2px; }
+    .nav-cta { padding: 9px 22px; border-radius: 100px; border: none; font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; background: var(--green); color: #fff; transition: background 0.2s; }
+    .nav-cta:hover { background: #7a5c38; }
+    .article-header { padding: 130px 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-light); margin-bottom: 32px; transition: color 0.18s; }
+    .back-link:hover { color: var(--ink); }
+    .article-tag { font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+    .article-title { font-family: var(--font-head); font-size: clamp(32px, 4vw, 54px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px; text-wrap: balance; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-light); padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .article-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+    .article-hero { margin: 0 auto; max-width: 1100px; padding: 0 80px 56px; }
+    .article-hero-img { width: 100%; border-radius: 16px; overflow: hidden; }
+    .article-body-wrap { max-width: 720px; margin: 0 auto; padding: 0 80px 100px; }
+    .article-body p { font-size: 17px; line-height: 1.8; color: var(--ink-mid); margin-bottom: 24px; }
+    .article-body h2 { font-family: var(--font-head); font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--ink); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article-body ul { margin: 0 0 24px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .article-body ul li { padding-left: 20px; position: relative; font-size: 17px; line-height: 1.75; color: var(--ink-mid); }
+    .article-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--green); font-weight: 300; }
+    .article-pullquote { border-left: 3px solid var(--green); padding: 4px 0 4px 28px; margin: 40px 0; }
+    .article-pullquote p { font-family: var(--font-head); font-size: 24px; line-height: 1.45; color: var(--ink); font-weight: 400; margin: 0; }
+    .article-cta-strip { background: var(--ink); border-radius: 16px; padding: 48px; margin: 56px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .article-cta-strip h3 { font-family: var(--font-head); font-size: 26px; color: #F0EDE6; font-weight: 400; line-height: 1.25; }
+    .article-cta-strip p { font-size: 14px; color: rgba(240,237,230,0.55); margin-top: 8px; line-height: 1.6; }
+    .btn-demo { padding: 14px 28px; border-radius: 100px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; font-family: var(--font-body); border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .btn-demo:hover { background: #7a5c38; }
+    footer { background: var(--ink); color: rgba(250,248,244,0.5); padding: 36px 80px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; flex-wrap: wrap; gap: 12px; }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .article-header, .article-hero, .article-body-wrap { padding-left: 24px; padding-right: 24px; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap"><img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx"/></div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+  </nav>
+
+  <div class="article-header">
+    <a href="articles.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Articles
+    </a>
+    <div class="article-tag">Technology</div>
+    <h1 class="article-title">Voice-First Field Capture: Why the Future of CRM Input Isn't Typing</h1>
+    <div class="article-meta">
+      <span>ConnectRx Editorial</span>
+      <span class="article-meta-dot"></span>
+      <span>6 min read</span>
+      <span class="article-meta-dot"></span>
+      <span>February 2026</span>
+    </div>
+  </div>
+
+  <div class="article-hero">
+    <div class="article-hero-img">
+      <svg viewBox="0 0 1020 380" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <rect width="1020" height="380" fill="#D4E4D8"/>
+        <!-- Waveform -->
+        <g transform="translate(120, 190)">
+          <line x1="0" y1="0" x2="0" y2="0" stroke="rgba(74,124,89,0.3)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="22" y1="-35" x2="22" y2="35" stroke="rgba(74,124,89,0.4)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="44" y1="-60" x2="44" y2="60" stroke="rgba(74,124,89,0.5)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="66" y1="-80" x2="66" y2="80" stroke="rgba(74,124,89,0.6)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="88" y1="-55" x2="88" y2="55" stroke="rgba(74,124,89,0.55)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="110" y1="-70" x2="110" y2="70" stroke="rgba(74,124,89,0.6)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="-90" x2="132" y2="90" stroke="rgba(74,124,89,0.65)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="154" y1="-65" x2="154" y2="65" stroke="rgba(74,124,89,0.55)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="176" y1="-45" x2="176" y2="45" stroke="rgba(74,124,89,0.45)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="198" y1="-25" x2="198" y2="25" stroke="rgba(74,124,89,0.35)" stroke-width="4" stroke-linecap="round"/>
+          <line x1="220" y1="-10" x2="220" y2="10" stroke="rgba(74,124,89,0.25)" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        <!-- Arrow -->
+        <path d="M420 190 L510 190" stroke="rgba(74,124,89,0.45)" stroke-width="2.5" fill="none"/>
+        <path d="M506 184 L513 190 L506 196" stroke="rgba(74,124,89,0.45)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Dashboard card -->
+        <rect x="540" y="110" width="340" height="160" rx="12" fill="rgba(74,124,89,0.08)" stroke="rgba(74,124,89,0.2)" stroke-width="1"/>
+        <rect x="560" y="130" width="120" height="10" rx="5" fill="rgba(74,124,89,0.35)"/>
+        <rect x="560" y="148" width="280" height="6" rx="3" fill="rgba(74,124,89,0.2)"/>
+        <rect x="560" y="161" width="240" height="6" rx="3" fill="rgba(74,124,89,0.15)"/>
+        <rect x="560" y="174" width="200" height="6" rx="3" fill="rgba(74,124,89,0.12)"/>
+        <!-- Category tags -->
+        <rect x="560" y="194" width="70" height="20" rx="10" fill="rgba(74,124,89,0.25)"/>
+        <text x="595" y="208" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="rgba(74,124,89,0.9)" text-anchor="middle">Competition</text>
+        <rect x="638" y="194" width="60" height="20" rx="10" fill="rgba(74,124,89,0.18)"/>
+        <text x="668" y="208" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="rgba(74,124,89,0.8)" text-anchor="middle">Urgent</text>
+        <rect x="706" y="194" width="72" height="20" rx="10" fill="rgba(74,124,89,0.12)"/>
+        <text x="742" y="208" font-family="Inter,sans-serif" font-size="9" font-weight="600" fill="rgba(74,124,89,0.7)" text-anchor="middle">Opportunity</text>
+        <rect x="560" y="222" width="100" height="28" rx="6" fill="rgba(74,124,89,0.35)"/>
+        <text x="610" y="240" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="white" text-anchor="middle">Submit</text>
+        <text x="40" y="355" font-family="DM Serif Display,serif" font-size="14" fill="rgba(74,124,89,0.4)">ConnectRx Insights</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="article-body-wrap">
+    <div class="article-body">
+
+      <p>It's 2:47pm on a Thursday. Your rep has just finished a 20-minute conversation with a surgeon who mentioned — almost in passing — that a competitor has dropped their pricing by 15% and is actively targeting the hospital's procurement committee. The rep has three more visits before the day ends, a script to file, and a two-hour drive back to the city.</p>
+
+      <p>The note never gets written. Not because the rep is negligent — they're not — but because the window between "important conversation" and "available time to document it properly" is always closing. By Friday morning, the detail is fuzzy. By Monday, it's gone.</p>
+
+      <p>This is the information loss problem that complex sales organisations have been absorbing silently for years. The intelligence exists — reps encounter it constantly — but the friction between capturing it and the tools available to capture it means most of it simply evaporates.</p>
+
+      <div class="article-pullquote">
+        <p>"The intelligence exists. It's being generated every single day in the field. The failure is in the capture infrastructure, not the people."</p>
+      </div>
+
+      <h2>Why WhatsApp Is Not a Solution</h2>
+
+      <p>In the absence of purpose-built capture tools, most commercial teams have improvised. WhatsApp groups. Teams channels. Emails to managers. Verbal debriefs at the weekly meeting. These aren't solutions — they're symptoms of a gap in the tooling stack.</p>
+
+      <p>The fundamental problem with informal channels isn't that the information doesn't get shared. It's that it doesn't get organised, categorised, prioritised, or preserved. A critical piece of competitive intelligence that arrives via a WhatsApp message on a Saturday afternoon competes with lunch photos and weekend plans. It gets buried. It doesn't feed into strategy. It doesn't get acted on at speed.</p>
+
+      <p>And critically, it's invisible to the organisation beyond a small group of people. A rep in Western Australia who encounters the same competitor pricing move as a rep in Queensland — they have no mechanism to connect those dots. The pattern that could trigger an urgent strategic response stays fragmented across two phone screens.</p>
+
+      <h2>What Voice-First Changes</h2>
+
+      <p>The insight behind GekoPulse's voice-first capture model is straightforward: the moment a rep walks out of a meaningful conversation is exactly the moment they should be capturing it. But typing on a phone in a hospital car park is slow, error-prone, and cognitively demanding. Speaking is not.</p>
+
+      <p>Voice capture removes the friction. A rep speaks a thirty-second summary of what they just heard. AI transcribes, cleans, and summarises it. The rep reviews and adjusts. A structured, categorised intelligence report is submitted to the central dashboard in under two minutes — while the conversation is still fresh, while the detail is still accurate.</p>
+
+      <p>Photo capture extends this further. A rep who photographs a competitor's product on a procedure tray, or a new piece of equipment in an OR suite, has created a piece of intelligence that no call note field could ever hold. That image, tagged and categorised, becomes part of a searchable, shareable record that the entire commercial team can access.</p>
+
+      <h2>The Categorisation Layer</h2>
+
+      <p>Raw captured intelligence is only useful if it's organised. GekoPulse's AI categorisation engine automatically sorts submissions into customisable categories — Competition, Opportunities, Threats, Adverse Events, Medical Affairs, Market Access — based on the content of what was submitted. The rep can adjust the categorisation before submitting, but in most cases the AI gets it right.</p>
+
+      <p>This matters because it makes the intelligence searchable and filterable at the dashboard level. A national manager who wants to understand the competitive landscape across all territories in the last 30 days doesn't read through hundreds of individual submissions — they filter by category, see trending topics surfaced automatically, and identify patterns that no individual rep could see from their own patch.</p>
+
+      <ul>
+        <li>Trending topics — topics appearing across multiple territories and reps are surfaced automatically</li>
+        <li>Priority flags — submissions can be marked high importance and escalated to management instantly</li>
+        <li>Geographic clustering — the same issue appearing in Melbourne and Brisbane in the same week triggers a national alert</li>
+        <li>Time stamps — intelligence is dated precisely, so response speed can be tracked</li>
+      </ul>
+
+      <h2>Closing the Loop: Intelligence Back to the Field</h2>
+
+      <p>The most powerful feature of a real-time intelligence system isn't the capture — it's what happens next. When management identifies a significant competitive development from field submissions, they need to get that information back to the reps who need it.</p>
+
+      <p>GekoPulse's broadcast function allows managers to push intelligence from the dashboard back to the whole team — or to specific territories. A rep in South Australia who hasn't encountered a new competitive tactic yet gets a heads-up from their colleagues in Victoria who have. They're forewarned. And critically, they receive AI-generated discovery questions designed to help them uncover the same issue when they're next in front of relevant customers.</p>
+
+      <p>The field stops being a place where intelligence disappears. It becomes a place where intelligence is generated, refined, and redistributed — continuously, in real time, across the whole organisation.</p>
+
+      <p>That's not a CRM feature. That's a competitive capability.</p>
+
+    </div>
+
+    <div class="article-cta-strip">
+      <div>
+        <h3>See GekoPulse's voice-first capture in action.</h3>
+        <p>Book a demo and we'll walk you through the full intelligence loop — from field capture to management dashboard.</p>
+      </div>
+      <button class="btn-demo" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2026 ConnectRx · connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

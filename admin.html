@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article Manager — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="articles-data.js"></script>
+  <style>
+    #crx-auth-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #1A1916;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+    }
+    #crx-auth-box {
+      background: #FAF8F4; border-radius: 16px; padding: 40px;
+      width: 340px; box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+    #crx-auth-logo {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 28px;
+    }
+    #crx-auth-logo img { width: 32px; height: 32px; object-fit: contain; mix-blend-mode: multiply; }
+    #crx-auth-logo span { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: -0.02em; color: #1A1916; }
+    #crx-auth-title { font-family: 'DM Serif Display', serif; font-size: 24px; font-weight: 400; color: #1A1916; margin-bottom: 6px; }
+    #crx-auth-sub { font-size: 13px; color: #7A7569; margin-bottom: 24px; }
+    #crx-auth-input {
+      width: 100%; padding: 10px 14px; border-radius: 8px;
+      border: 1.5px solid rgba(26,25,22,0.18); font-size: 14px;
+      font-family: 'Inter', sans-serif; outline: none;
+      margin-bottom: 12px; background: #fff; color: #1A1916;
+      transition: border-color 0.18s;
+    }
+    #crx-auth-input:focus { border-color: #8B6B45; }
+    #crx-auth-btn {
+      width: 100%; padding: 11px; border-radius: 8px; border: none;
+      background: #8B6B45; color: #fff; font-size: 14px; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer; transition: background 0.18s;
+    }
+    #crx-auth-btn:hover { background: #7a5c38; }
+    #crx-auth-error { font-size: 12.5px; color: #c0392b; margin-top: 10px; display: none; }
+  </style>
+  <script>
+    var ADMIN_PASSWORD = "connectrx2026";
+    var SESSION_KEY = "crx_admin_auth";
+    var _authCleared = sessionStorage.getItem(SESSION_KEY) === "1";
+
+    window.addEventListener('DOMContentLoaded', function() {
+      if (_authCleared) return;
+      var overlay = document.getElementById('crx-auth-overlay');
+      if (overlay) overlay.style.display = 'flex';
+      document.getElementById('root').style.display = 'none';
+      document.getElementById('crx-auth-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkAuth();
+      });
+      setTimeout(function() {
+        document.getElementById('crx-auth-input').focus();
+      }, 100);
+    });
+
+    function checkAuth() {
+      var val = document.getElementById('crx-auth-input').value;
+      var err = document.getElementById('crx-auth-error');
+      if (val === ADMIN_PASSWORD) {
+        sessionStorage.setItem(SESSION_KEY, "1");
+        document.getElementById('crx-auth-overlay').style.display = 'none';
+        document.getElementById('root').style.display = '';
+      } else {
+        err.style.display = 'block';
+        err.textContent = 'Incorrect password. Try again.';
+        document.getElementById('crx-auth-input').value = '';
+        document.getElementById('crx-auth-input').focus();
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5; --cream-dark: #E8E0D4;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-dark: #7a5c38;
+      --purple: #5E2EA8; --purple-light: #E8DEFD;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif;
+      --font-ui: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--cream-mid); color: var(--ink); -webkit-font-smoothing: antialiased; height: 100vh; overflow: hidden; }
+    #root { height: 100vh; display: flex; flex-direction: column; }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--cream-dark); border-radius: 3px; }
+
+    /* Form elements */
+    input, textarea, select {
+      font-family: var(--font-body); font-size: 14px; color: var(--ink);
+      background: var(--cream); border: 1.5px solid var(--border-strong);
+      border-radius: 8px; padding: 9px 12px; width: 100%;
+      outline: none; transition: border-color 0.18s;
+      resize: vertical;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--green); }
+    label { font-size: 12px; font-weight: 600; color: var(--ink-light); letter-spacing: 0.04em; text-transform: uppercase; display: block; margin-bottom: 6px; font-family: var(--font-ui); }
+    .field { margin-bottom: 16px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+
+    button { font-family: var(--font-body); cursor: pointer; transition: all 0.18s; }
+  </style>
+</head>
+<body>
+  <div id="crx-auth-overlay" style="display:none;">
+  <div id="crx-auth-box">
+    <div id="crx-auth-logo">
+      <img src="uploads/GekoLogoBrown.png" alt="ConnectRx" />
+      <span>ConnectRx</span>
+    </div>
+    <div id="crx-auth-title">Admin Access</div>
+    <div id="crx-auth-sub">Enter your password to continue.</div>
+    <input id="crx-auth-input" type="password" placeholder="Password" autocomplete="current-password" />
+    <button id="crx-auth-btn" onclick="checkAuth()">Continue</button>
+    <div id="crx-auth-error"></div>
+  </div>
+</div>
+
+<div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useRef, useCallback } = React;
+
+    // ── Helpers ──────────────────────────────────────────────────────
+    function slugify(str) {
+      return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }
+
+    function downloadJS(filename, content) {
+      const blob = new Blob([content], { type: 'text/javascript;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+    }
+
+    const CATEGORIES = [
+      { value: 'strategy', label: 'Sales Strategy' },
+      { value: 'technology', label: 'Technology' },
+      { value: 'industry', label: 'Complex Sales' },
+    ];
+
+    const PATTERNS = [
+      { value: 'map', label: 'Influence Map (tan)' },
+      { value: 'network', label: 'Network Graph (warm)' },
+      { value: 'voice', label: 'Voice Waveform (green)' },
+      { value: 'okr', label: 'OKR Progress (purple)' },
+      { value: 'territory', label: 'Territory Map (earth)' },
+      { value: 'default', label: 'Abstract (default)' },
+    ];
+
+    const BLOCK_TYPES = [
+      { value: 'paragraph', label: 'Paragraph' },
+      { value: 'heading', label: 'Section Heading' },
+      { value: 'pullquote', label: 'Pull Quote' },
+      { value: 'list', label: 'Bullet List' },
+    ];
+
+    const emptyForm = () => ({
+      title: '',
+      tag: '',
+      category: 'strategy',
+      date: '',
+      readTime: '',
+      excerpt: '',
+      patternType: 'default',
+      blocks: [{ id: Date.now(), type: 'paragraph', content: '' }],
+      ctaHeading: 'See it in action.',
+      ctaBody: 'Book a demo and we\u2019ll walk you through the platform.',
+    });
+
+    // ── Article HTML generator ────────────────────────────────────────
+    function generateArticleHTML(form) {
+      const bodyHtml = form.blocks.map(b => {
+        if (b.type === 'paragraph') return `      <p>${b.content}</p>\n`;
+        if (b.type === 'heading') return `      <h2>${b.content}</h2>\n`;
+        if (b.type === 'pullquote') return `      <div class="article-pullquote"><p>\u201c${b.content}\u201d</p></div>\n`;
+        if (b.type === 'list') {
+          const items = b.content.split('\n').filter(l => l.trim());
+          return `      <ul>\n${items.map(i => `        <li>${i.trim()}</li>`).join('\n')}\n      </ul>\n`;
+        }
+        return '';
+      }).join('\n');
+
+      return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${form.title} \u2014 ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-light: #F2EBE0;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif; --font-ui: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(250,248,244,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-logo-wrap { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta { padding: 9px 22px; border-radius: 100px; border: none; font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; background: var(--green); color: #fff; transition: background 0.2s; }
+    .nav-cta:hover { background: #7a5c38; }
+    .article-header { padding: 130px 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-light); margin-bottom: 32px; transition: color 0.18s; }
+    .back-link:hover { color: var(--ink); }
+    .article-tag { font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+    .article-title { font-family: var(--font-head); font-size: clamp(32px, 4vw, 54px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px; text-wrap: balance; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-light); padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .article-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.5; display: inline-block; }
+    .article-hero { margin: 0 auto; max-width: 1100px; padding: 0 80px 56px; }
+    .article-hero-img { width: 100%; border-radius: 16px; overflow: hidden; }
+    .article-body-wrap { max-width: 720px; margin: 0 auto; padding: 0 80px 100px; }
+    .article-body p { font-size: 17px; line-height: 1.8; color: var(--ink-mid); margin-bottom: 24px; }
+    .article-body h2 { font-family: var(--font-head); font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--ink); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article-body ul { margin: 0 0 24px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .article-body ul li { padding-left: 20px; position: relative; font-size: 17px; line-height: 1.75; color: var(--ink-mid); }
+    .article-body ul li::before { content: '\u2014'; position: absolute; left: 0; color: var(--green); font-weight: 300; }
+    .article-pullquote { border-left: 3px solid var(--green); padding: 4px 0 4px 28px; margin: 40px 0; }
+    .article-pullquote p { font-family: var(--font-head); font-size: 24px; line-height: 1.45; color: var(--ink); font-weight: 400; margin: 0; }
+    .article-cta-strip { background: var(--ink); border-radius: 16px; padding: 48px; margin: 56px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .article-cta-strip h3 { font-family: var(--font-head); font-size: 26px; color: #F0EDE6; font-weight: 400; line-height: 1.25; }
+    .article-cta-strip p { font-size: 14px; color: rgba(240,237,230,0.55); margin-top: 8px; line-height: 1.6; }
+    .btn-demo { padding: 14px 28px; border-radius: 100px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; font-family: var(--font-body); border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .btn-demo:hover { background: #7a5c38; }
+    footer { background: var(--ink); color: rgba(250,248,244,0.5); padding: 36px 80px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; flex-wrap: wrap; gap: 12px; }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .article-header, .article-hero, .article-body-wrap { padding-left: 24px; padding-right: 24px; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap"><img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx"/></div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+  </nav>
+
+  <div class="article-header">
+    <a href="articles.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Articles
+    </a>
+    <div class="article-tag">${form.tag || (CATEGORIES.find(c => c.value === form.category) || {}).label || ''}</div>
+    <h1 class="article-title">${form.title}</h1>
+    <div class="article-meta">
+      <span>ConnectRx Editorial</span>
+      <span class="article-meta-dot"></span>
+      <span>${form.readTime}</span>
+      <span class="article-meta-dot"></span>
+      <span>${form.date}</span>
+    </div>
+  </div>
+
+  <div class="article-hero">
+    <div class="article-hero-img">
+      <!-- Hero illustration placeholder — replace with custom artwork -->
+      <svg viewBox="0 0 1020 380" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <rect width="1020" height="380" fill="#EDE8DF"/>
+        <rect x="60" y="80" width="260" height="220" rx="16" fill="rgba(139,107,69,0.07)" stroke="rgba(139,107,69,0.14)" stroke-width="1.5"/>
+        <rect x="88" y="108" width="140" height="12" rx="6" fill="rgba(139,107,69,0.25)"/>
+        <rect x="88" y="128" width="200" height="8" rx="4" fill="rgba(139,107,69,0.14)"/>
+        <rect x="88" y="144" width="180" height="8" rx="4" fill="rgba(139,107,69,0.10)"/>
+        <rect x="88" y="160" width="160" height="8" rx="4" fill="rgba(139,107,69,0.08)"/>
+        <rect x="88" y="188" width="80" height="28" rx="14" fill="rgba(139,107,69,0.3)"/>
+        <circle cx="620" cy="190" r="120" fill="rgba(139,107,69,0.06)" stroke="rgba(139,107,69,0.12)" stroke-width="1.5"/>
+        <circle cx="620" cy="190" r="80" fill="rgba(139,107,69,0.04)" stroke="rgba(139,107,69,0.08)" stroke-width="1"/>
+        <circle cx="620" cy="190" r="8" fill="rgba(139,107,69,0.4)"/>
+        <circle cx="700" cy="130" r="6" fill="rgba(139,107,69,0.3)"/>
+        <circle cx="560" cy="260" r="5" fill="rgba(139,107,69,0.25)"/>
+        <circle cx="680" cy="255" r="4" fill="rgba(139,107,69,0.2)"/>
+        <line x1="620" y1="190" x2="700" y2="130" stroke="rgba(139,107,69,0.2)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="620" y1="190" x2="560" y2="260" stroke="rgba(139,107,69,0.15)" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="620" y1="190" x2="680" y2="255" stroke="rgba(139,107,69,0.12)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="40" y="355" font-family="DM Serif Display,serif" font-size="14" fill="rgba(139,107,69,0.3)">ConnectRx Insights</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="article-body-wrap">
+    <div class="article-body">
+${bodyHtml}
+    </div>
+
+    <div class="article-cta-strip">
+      <div>
+        <h3>${form.ctaHeading}</h3>
+        <p>${form.ctaBody}</p>
+      </div>
+      <button class="btn-demo" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>&copy; 2026 ConnectRx &middot; connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>`;
+    }
+
+    function generateUpdatedDataJS(newEntry) {
+      const allArticles = [...(window.ARTICLES_DATA || []), newEntry];
+      const json = JSON.stringify(allArticles, null, 2);
+      return `// ─────────────────────────────────────────────────────────────
+//  ConnectRx Articles Data
+//  To add a new article:
+//    1. Use admin.html to generate the article HTML file
+//    2. Upload the generated file to the project
+//    3. Add a new entry to this array (admin.html does this for you)
+// ─────────────────────────────────────────────────────────────
+
+window.ARTICLES_DATA = ${json};\n`;
+    }
+
+    // ── Main App ─────────────────────────────────────────────────────
+    function App() {
+      const [form, setForm] = useState(emptyForm());
+      const [tab, setTab] = useState('edit'); // 'edit' | 'preview' | 'export'
+      const [aiLoading, setAiLoading] = useState(false);
+      const [aiError, setAiError] = useState('');
+      const [exported, setExported] = useState(false);
+
+      const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
+
+      // Blocks
+      const addBlock = (type = 'paragraph') => {
+        setForm(f => ({ ...f, blocks: [...f.blocks, { id: Date.now(), type, content: '' }] }));
+      };
+      const updateBlock = (id, key, val) => {
+        setForm(f => ({ ...f, blocks: f.blocks.map(b => b.id === id ? { ...b, [key]: val } : b) }));
+      };
+      const removeBlock = (id) => {
+        setForm(f => ({ ...f, blocks: f.blocks.filter(b => b.id !== id) }));
+      };
+      const moveBlock = (id, dir) => {
+        setForm(f => {
+          const arr = [...f.blocks];
+          const i = arr.findIndex(b => b.id === id);
+          const j = i + dir;
+          if (j < 0 || j >= arr.length) return f;
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+          return { ...f, blocks: arr };
+        });
+      };
+
+      // AI Assist
+      const aiAssist = async () => {
+        if (!form.title) { setAiError('Please enter a title first.'); return; }
+        setAiLoading(true);
+        setAiError('');
+        try {
+          const prompt = `You are a B2B content writer for ConnectRx, an Australian medical device sales intelligence platform.
+
+Write a sharp, insightful article for complex sales professionals (medical device / pharma reps and managers).
+
+Title: "${form.title}"
+Category: ${form.category}
+${form.excerpt ? `Excerpt/angle: ${form.excerpt}` : ''}
+
+Write 4–6 body sections. Return ONLY a JSON array of blocks, no other text.
+Each block: { "type": "paragraph"|"heading"|"pullquote"|"list", "content": "..." }
+For list blocks, put each bullet on a new line in content.
+Heading blocks should be section titles (no numbers).
+Include 1 pullquote and 1 list block.
+Keep it Australian English. Authoritative, not salesy. About 800–1000 words total.`;
+
+          throw new Error('AI draft is not available in this version. Please write manually.');
+        } catch (e) {
+          setAiError(e.message || 'AI draft unavailable. Please write manually.');
+        }
+        setAiLoading(false);
+      };
+
+      // Export
+      const handleDownloadArticle = () => {
+        const slug = slugify(form.title) || 'new-article';
+        const filename = `article-${slug}.html`;
+        downloadFile(filename, generateArticleHTML(form));
+        setExported(true);
+      };
+
+      const handleDownloadData = () => {
+        const slug = slugify(form.title) || 'new-article';
+        const entry = {
+          id: slug,
+          file: `article-${slug}.html`,
+          tag: form.tag || (CATEGORIES.find(c => c.value === form.category) || {}).label || '',
+          category: form.category,
+          title: form.title,
+          excerpt: form.excerpt,
+          readTime: form.readTime,
+          date: form.date,
+          patternType: form.patternType,
+        };
+        downloadJS('articles-data.js', generateUpdatedDataJS(entry));
+      };
+
+      const articles = window.ARTICLES_DATA || [];
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: 'var(--cream-mid)' }}>
+
+          {/* Top bar */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '0 24px', height: 56,
+            background: 'var(--ink)', flexShrink: 0,
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <img src="uploads/GekoLogoBrown.png" style={{ width: 28, height: 28, objectFit: 'contain', mixBlendMode: 'screen', opacity: 0.85 }} alt="" />
+              <span style={{ fontFamily: 'var(--font-ui)', fontWeight: 700, fontSize: 15, color: 'rgba(250,248,244,0.9)', letterSpacing: '-0.02em' }}>ConnectRx</span>
+              <span style={{ color: 'rgba(250,248,244,0.3)', margin: '0 4px' }}>/</span>
+              <span style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 14, color: 'rgba(250,248,244,0.6)' }}>Article Manager</span>
+            </div>
+            <a href="articles.html" style={{ fontSize: 13, color: 'rgba(250,248,244,0.5)', fontWeight: 500, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3l-4 4 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              View Articles
+            </a>
+          </div>
+
+          {/* Body */}
+          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+
+            {/* Sidebar */}
+            <div style={{
+              width: 260, flexShrink: 0, background: 'var(--cream)',
+              borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column',
+              overflow: 'hidden',
+            }}>
+              <div style={{ padding: '20px 16px 12px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-light)', fontFamily: 'var(--font-ui)', marginBottom: 2 }}>Published Articles</div>
+                <div style={{ fontSize: 12, color: 'var(--ink-light)', marginTop: 4 }}>{articles.length} article{articles.length !== 1 ? 's' : ''}</div>
+              </div>
+              <div style={{ overflowY: 'auto', flex: 1, padding: '8px 0' }}>
+                {articles.map(a => (
+                  <div key={a.id} style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--green)', fontFamily: 'var(--font-ui)', marginBottom: 4 }}>{a.tag}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--ink)', lineHeight: 1.35, marginBottom: 6 }}>{a.title}</div>
+                    <div style={{ fontSize: 11.5, color: 'var(--ink-light)' }}>{a.date} · {a.readTime}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ padding: 12, borderTop: '1px solid var(--border)', flexShrink: 0 }}>
+                <button
+                  onClick={() => { setForm(emptyForm()); setTab('edit'); setExported(false); }}
+                  style={{
+                    width: '100%', padding: '9px 0', borderRadius: 8,
+                    background: 'var(--green)', color: '#fff', border: 'none',
+                    fontSize: 13, fontWeight: 600,
+                  }}
+                >+ New Article</button>
+              </div>
+            </div>
+
+            {/* Main area */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+
+              {/* Tab bar */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 0, padding: '0 24px', borderBottom: '1px solid var(--border)', background: 'var(--cream)', flexShrink: 0, height: 44 }}>
+                {[['edit','Edit'],['preview','Preview'],['export','Export & Download']].map(([key,label]) => (
+                  <button key={key} onClick={() => setTab(key)} style={{
+                    padding: '0 16px', height: 44, border: 'none', background: 'none',
+                    fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                    color: tab === key ? 'var(--ink)' : 'var(--ink-light)',
+                    borderBottom: tab === key ? '2px solid var(--green)' : '2px solid transparent',
+                    transition: 'all 0.18s',
+                  }}>{label}</button>
+                ))}
+              </div>
+
+              {/* Edit tab */}
+              {tab === 'edit' && (
+                <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+                  <div style={{ maxWidth: 680, margin: '0 auto' }}>
+
+                    {/* AI Assist */}
+                    <div style={{
+                      background: 'linear-gradient(135deg, #F0EBE0, #E8E0F0)',
+                      border: '1px solid rgba(139,107,69,0.2)',
+                      borderRadius: 12, padding: '16px 20px', marginBottom: 24,
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 3 }}>AI Writing Assistant</div>
+                        <div style={{ fontSize: 12, color: 'var(--ink-light)', lineHeight: 1.5 }}>Enter a title (and optional excerpt), then let AI draft the full article body for you.</div>
+                        {aiError && <div style={{ fontSize: 12, color: '#c0392b', marginTop: 6 }}>{aiError}</div>}
+                      </div>
+                      <button onClick={aiAssist} disabled={aiLoading} style={{
+                        padding: '9px 20px', borderRadius: 8, border: 'none', whiteSpace: 'nowrap',
+                        background: aiLoading ? 'var(--cream-dark)' : 'var(--ink)',
+                        color: aiLoading ? 'var(--ink-light)' : '#fff',
+                        fontSize: 13, fontWeight: 600, flexShrink: 0,
+                      }}>
+                        {aiLoading ? 'Writing…' : '✦ Draft with AI'}
+                      </button>
+                    </div>
+
+                    {/* Meta fields */}
+                    <div style={{ background: 'var(--cream)', borderRadius: 12, padding: 20, marginBottom: 16, border: '1px solid var(--border)' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-light)', fontFamily: 'var(--font-ui)', marginBottom: 16 }}>Article Details</div>
+                      <div className="field">
+                        <label>Title</label>
+                        <input value={form.title} onChange={e => update('title', e.target.value)} placeholder="e.g. Why the Old Way of Territory Planning Is Holding You Back" />
+                      </div>
+                      <div className="field-row">
+                        <div>
+                          <label>Category</label>
+                          <select value={form.category} onChange={e => update('category', e.target.value)}>
+                            {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label>Tag (displayed on card)</label>
+                          <input value={form.tag} onChange={e => update('tag', e.target.value)} placeholder="e.g. Sales Strategy" />
+                        </div>
+                      </div>
+                      <div className="field-row">
+                        <div>
+                          <label>Date</label>
+                          <input value={form.date} onChange={e => update('date', e.target.value)} placeholder="e.g. May 2026" />
+                        </div>
+                        <div>
+                          <label>Read Time</label>
+                          <input value={form.readTime} onChange={e => update('readTime', e.target.value)} placeholder="e.g. 8 min read" />
+                        </div>
+                      </div>
+                      <div className="field">
+                        <label>Excerpt (shown on article listing page)</label>
+                        <textarea rows={3} value={form.excerpt} onChange={e => update('excerpt', e.target.value)} placeholder="1–2 sentence hook that appears on the articles listing card…" />
+                      </div>
+                      <div className="field" style={{ marginBottom: 0 }}>
+                        <label>Card Illustration Pattern</label>
+                        <select value={form.patternType} onChange={e => update('patternType', e.target.value)}>
+                          {PATTERNS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Body blocks */}
+                    <div style={{ background: 'var(--cream)', borderRadius: 12, padding: 20, marginBottom: 16, border: '1px solid var(--border)' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-light)', fontFamily: 'var(--font-ui)', marginBottom: 16 }}>Article Body</div>
+
+                      {form.blocks.map((block, idx) => (
+                        <div key={block.id} style={{
+                          border: '1px solid var(--border)', borderRadius: 10,
+                          padding: 14, marginBottom: 12, background: 'var(--cream-mid)',
+                        }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                            <select value={block.type} onChange={e => updateBlock(block.id, 'type', e.target.value)} style={{ width: 'auto', padding: '5px 10px', fontSize: 12, flex: 1 }}>
+                              {BLOCK_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                            </select>
+                            <button onClick={() => moveBlock(block.id, -1)} disabled={idx === 0} style={{ padding: '4px 8px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--cream)', fontSize: 12, color: 'var(--ink-mid)' }}>↑</button>
+                            <button onClick={() => moveBlock(block.id, 1)} disabled={idx === form.blocks.length - 1} style={{ padding: '4px 8px', border: '1px solid var(--border)', borderRadius: 6, background: 'var(--cream)', fontSize: 12, color: 'var(--ink-mid)' }}>↓</button>
+                            <button onClick={() => removeBlock(block.id)} style={{ padding: '4px 8px', border: '1px solid rgba(200,80,60,0.3)', borderRadius: 6, background: 'rgba(200,80,60,0.06)', fontSize: 12, color: '#c0392b' }}>✕</button>
+                          </div>
+                          <textarea
+                            rows={block.type === 'paragraph' ? 4 : block.type === 'list' ? 5 : 2}
+                            value={block.content}
+                            onChange={e => updateBlock(block.id, 'content', e.target.value)}
+                            placeholder={
+                              block.type === 'paragraph' ? 'Write your paragraph here…' :
+                              block.type === 'heading' ? 'Section heading…' :
+                              block.type === 'pullquote' ? 'A compelling quote from the article…' :
+                              'One bullet point per line…'
+                            }
+                            style={{ marginBottom: 0 }}
+                          />
+                        </div>
+                      ))}
+
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+                        {BLOCK_TYPES.map(t => (
+                          <button key={t.value} onClick={() => addBlock(t.value)} style={{
+                            padding: '6px 14px', border: '1.5px dashed var(--border-strong)',
+                            borderRadius: 8, background: 'transparent', fontSize: 12,
+                            color: 'var(--ink-mid)', fontWeight: 500,
+                          }}>+ {t.label}</button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* CTA */}
+                    <div style={{ background: 'var(--cream)', borderRadius: 12, padding: 20, border: '1px solid var(--border)' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-light)', fontFamily: 'var(--font-ui)', marginBottom: 16 }}>End-of-Article CTA</div>
+                      <div className="field">
+                        <label>CTA Heading</label>
+                        <input value={form.ctaHeading} onChange={e => update('ctaHeading', e.target.value)} />
+                      </div>
+                      <div className="field" style={{ marginBottom: 0 }}>
+                        <label>CTA Subtext</label>
+                        <input value={form.ctaBody} onChange={e => update('ctaBody', e.target.value)} />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+              {/* Preview tab */}
+              {tab === 'preview' && (
+                <div style={{ flex: 1, overflow: 'hidden', background: '#fff' }}>
+                  <iframe
+                    srcDoc={generateArticleHTML(form)}
+                    style={{ width: '100%', height: '100%', border: 'none' }}
+                    title="Article preview"
+                  />
+                </div>
+              )}
+
+              {/* Export tab */}
+              {tab === 'export' && (
+                <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
+                  <div style={{ maxWidth: 600, margin: '0 auto' }}>
+
+                    <div style={{ fontFamily: 'var(--font-head)', fontSize: 28, fontWeight: 400, color: 'var(--ink)', marginBottom: 8 }}>Publish Your Article</div>
+                    <div style={{ fontSize: 14, color: 'var(--ink-light)', marginBottom: 32, lineHeight: 1.7 }}>Two steps to make your new article live on the site. Download both files, then upload them to your project.</div>
+
+                    {/* Step 1 */}
+                    <div style={{ background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: 12, padding: 24, marginBottom: 16 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, flexShrink: 0, fontFamily: 'var(--font-ui)' }}>1</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>Download Article HTML</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', lineHeight: 1.6, marginBottom: 16 }}>
+                            Downloads <code style={{ background: 'var(--cream-mid)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>article-{slugify(form.title) || 'new-article'}.html</code> — the complete article page. Upload this file to your project.
+                          </div>
+                          <button onClick={handleDownloadArticle} style={{
+                            padding: '10px 22px', borderRadius: 8, border: 'none',
+                            background: 'var(--ink)', color: '#fff', fontSize: 13, fontWeight: 600,
+                          }}>
+                            ↓ Download Article File
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div style={{ background: 'var(--cream)', border: '1px solid var(--border)', borderRadius: 12, padding: 24, marginBottom: 24 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, flexShrink: 0, fontFamily: 'var(--font-ui)' }}>2</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>Download Updated Article Listing</div>
+                          <div style={{ fontSize: 13, color: 'var(--ink-light)', lineHeight: 1.6, marginBottom: 16 }}>
+                            Downloads an updated <code style={{ background: 'var(--cream-mid)', padding: '1px 6px', borderRadius: 4, fontSize: 12 }}>articles-data.js</code> with your new article added. Replace the existing file in your project — this makes the article appear on the listing page automatically.
+                          </div>
+                          <button onClick={handleDownloadData} style={{
+                            padding: '10px 22px', borderRadius: 8, border: 'none',
+                            background: 'var(--green)', color: '#fff', fontSize: 13, fontWeight: 600,
+                          }}>
+                            ↓ Download Updated articles-data.js
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(139,107,69,0.07)', border: '1px solid rgba(139,107,69,0.18)', borderRadius: 10, padding: '14px 18px', fontSize: 13, color: 'var(--ink-mid)', lineHeight: 1.6 }}>
+                      <strong>Tip:</strong> After uploading both files, refresh <a href="articles.html" style={{ color: 'var(--green)', fontWeight: 600 }}>articles.html</a> and your new article will appear at the top of the listing.
+                    </div>
+
+                  </div>
+                </div>
+              )}
+
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

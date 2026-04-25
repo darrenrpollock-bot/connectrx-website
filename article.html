@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Generic CRMs Are Failing Australian Medical Device Sales Teams — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream:        #FAF8F4;
+      --cream-mid:    #F2EDE5;
+      --ink:          #1A1916;
+      --ink-mid:      #3D3B35;
+      --ink-light:    #7A7569;
+      --green:        #8B6B45;
+      --green-light:  #F2EBE0;
+      --border:       rgba(26,25,22,0.10);
+      --border-strong:rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif;
+      --font-ui:   'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 68px;
+      background: rgba(250,248,244,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--font-ui); font-weight: 700; font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo-wrap {
+      width: 38px; height: 38px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { color: var(--ink); border-bottom: 1.5px solid var(--green); padding-bottom: 2px; }
+    .nav-cta {
+      padding: 9px 22px; border-radius: 100px;
+      border: none; font-size: 13.5px; font-weight: 600;
+      font-family: var(--font-body); cursor: pointer;
+      background: var(--green); color: #fff; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: #7a5c38; }
+
+    /* ── Article header ── */
+    .article-header {
+      padding: 130px 80px 64px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--ink-light);
+      margin-bottom: 32px; transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--ink); }
+    .article-tag {
+      font-family: var(--font-ui);
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 18px;
+      display: block;
+    }
+    .article-title {
+      font-family: var(--font-head);
+      font-size: clamp(32px, 4.5vw, 58px);
+      font-weight: 400; line-height: 1.1;
+      letter-spacing: -0.02em; color: var(--ink);
+      margin-bottom: 24px; text-wrap: balance;
+      max-width: 800px;
+    }
+    .article-meta-bar {
+      display: flex; align-items: center; gap: 16px;
+      flex-wrap: wrap; padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .author-chip {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .author-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-ui); font-size: 13px; font-weight: 700;
+      color: var(--green);
+    }
+    .author-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .author-role { font-size: 12px; color: var(--ink-light); }
+    .meta-sep { width: 1px; height: 32px; background: var(--border-strong); }
+    .meta-item { font-size: 13px; color: var(--ink-light); }
+
+    /* ── Hero image ── */
+    .article-hero-img {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      padding: 0 80px 56px;
+    }
+    .article-hero-img-inner {
+      width: 100%; height: 420px; border-radius: 18px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #EDE0CF 0%, #D4C4A8 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Article layout ── */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 64px;
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 80px 120px;
+      align-items: start;
+    }
+
+    /* ── Article body ── */
+    .article-body { min-width: 0; }
+    .article-body p {
+      font-size: 17px; line-height: 1.82;
+      color: var(--ink-mid); margin-bottom: 24px;
+      font-weight: 400;
+    }
+    .article-body h2 {
+      font-family: var(--font-head);
+      font-size: 28px; font-weight: 400;
+      letter-spacing: -0.02em; color: var(--ink);
+      margin: 48px 0 18px; line-height: 1.2;
+    }
+    .article-body h3 {
+      font-family: var(--font-ui);
+      font-size: 16px; font-weight: 700;
+      color: var(--ink); margin: 36px 0 12px;
+      letter-spacing: -0.01em;
+    }
+    .article-body blockquote {
+      border-left: 3px solid var(--green);
+      margin: 36px 0; padding: 4px 28px;
+    }
+    .article-body blockquote p {
+      font-family: var(--font-head);
+      font-size: 21px; line-height: 1.5;
+      color: var(--ink); font-style: italic;
+      margin-bottom: 10px;
+    }
+    .article-body blockquote cite {
+      font-size: 13px; color: var(--ink-light);
+      font-style: normal; font-weight: 500;
+    }
+    .article-body ul, .article-body ol {
+      margin: 0 0 24px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .article-body li {
+      font-size: 17px; line-height: 1.7; color: var(--ink-mid);
+    }
+    .article-body .callout {
+      background: var(--green-light);
+      border-radius: 14px; padding: 24px 28px;
+      margin: 36px 0;
+    }
+    .article-body .callout-title {
+      font-family: var(--font-ui); font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--green); margin-bottom: 10px;
+    }
+    .article-body .callout p {
+      font-size: 15px; margin-bottom: 0; color: var(--ink-mid);
+    }
+    .article-divider {
+      height: 1px; background: var(--border);
+      margin: 48px 0;
+    }
+
+    /* ── CTA box in article ── */
+    .article-cta-box {
+      background: var(--ink); border-radius: 18px;
+      padding: 36px; margin: 48px 0; color: #F0EDE6;
+    }
+    .article-cta-label {
+      font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(240,237,230,0.5); margin-bottom: 12px;
+    }
+    .article-cta-title {
+      font-family: var(--font-head);
+      font-size: 22px; font-weight: 400; line-height: 1.3;
+      color: #F0EDE6; margin-bottom: 10px;
+    }
+    .article-cta-sub {
+      font-size: 14px; color: rgba(240,237,230,0.6);
+      line-height: 1.6; margin-bottom: 20px;
+    }
+    .article-cta-btn {
+      display: inline-block; padding: 11px 24px; border-radius: 100px;
+      background: var(--green); color: #fff;
+      font-size: 14px; font-weight: 600; font-family: var(--font-body);
+      border: none; cursor: pointer; transition: background 0.2s;
+    }
+    .article-cta-btn:hover { background: #7a5c38; }
+
+    /* ── Sidebar ── */
+    .article-sidebar { position: sticky; top: 92px; }
+    .sidebar-section { margin-bottom: 36px; }
+    .sidebar-label {
+      font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-light); margin-bottom: 14px;
+    }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .toc-item a {
+      font-size: 13.5px; color: var(--ink-light);
+      line-height: 1.5; transition: color 0.18s;
+      display: block; padding: 2px 0 2px 12px;
+      border-left: 2px solid transparent;
+    }
+    .toc-item a:hover, .toc-item a.active {
+      color: var(--ink); border-left-color: var(--green);
+    }
+    .related-card {
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .related-card:last-child { border-bottom: none; }
+    .related-tag {
+      font-family: var(--font-ui); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 6px;
+    }
+    .related-title {
+      font-family: var(--font-head);
+      font-size: 15px; font-weight: 400; line-height: 1.35;
+      color: var(--ink); transition: color 0.18s;
+    }
+    .related-card:hover .related-title { color: var(--green); }
+    .share-row { display: flex; gap: 10px; }
+    .share-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.18s; background: transparent;
+    }
+    .share-btn:hover { background: var(--green); border-color: var(--green); }
+    .share-btn:hover svg { color: #fff; }
+    .share-btn svg { width: 15px; height: 15px; color: var(--ink-mid); }
+
+    /* ── More articles ── */
+    .more-articles {
+      background: var(--cream-mid);
+      padding: 80px;
+      border-top: 1px solid var(--border);
+    }
+    .more-articles-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 40px;
+    }
+    .more-articles-title {
+      font-family: var(--font-head);
+      font-size: 28px; font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    .more-articles-link {
+      font-size: 13.5px; font-weight: 600; color: var(--green);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .more-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .more-card {
+      background: var(--cream); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      transition: box-shadow 0.22s, transform 0.22s;
+    }
+    .more-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(26,25,22,0.08); }
+    .more-card-img {
+      height: 140px; background: var(--cream-mid);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .more-card-body { padding: 20px; }
+    .more-card-tag {
+      font-family: var(--font-ui); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 8px;
+    }
+    .more-card-title {
+      font-family: var(--font-head);
+      font-size: 16px; line-height: 1.35; color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .more-card-meta { font-size: 12px; color: var(--ink-light); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--ink); color: rgba(250,248,244,0.5);
+      padding: 36px 80px;
+    }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12.5px; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .article-header { padding: 110px 24px 48px; }
+      .article-hero-img { padding: 0 24px 40px; }
+      .article-hero-img-inner { height: 240px; }
+      .article-layout { grid-template-columns: 1fr; gap: 0; padding: 0 24px 80px; }
+      .article-sidebar { position: static; margin-top: 48px; }
+      .more-articles { padding: 48px 24px; }
+      .more-grid { grid-template-columns: 1fr; gap: 16px; }
+      footer { padding: 32px 24px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap">
+        <img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx logo"/>
+      </div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div>
+      <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </nav>
+
+  <!-- Article header -->
+  <header class="article-header">
+    <a href="articles.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3L3 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      All Articles
+    </a>
+    <span class="article-tag">Sales Strategy</span>
+    <h1 class="article-title">Why Generic CRMs Are Failing Australian Medical Device Sales Teams</h1>
+    <div class="article-meta-bar">
+      <div class="author-chip">
+        <div class="author-avatar">CE</div>
+        <div>
+          <div class="author-name">ConnectRx Editorial</div>
+          <div class="author-role">ConnectRx Insights</div>
+        </div>
+      </div>
+      <div class="meta-sep"></div>
+      <span class="meta-item">April 2026</span>
+      <div class="meta-sep"></div>
+      <span class="meta-item">12 min read</span>
+    </div>
+  </header>
+
+  <!-- Hero image -->
+  <div class="article-hero-img">
+    <div class="article-hero-img-inner">
+      <svg viewBox="0 0 960 420" width="960" height="420" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="960" height="420" fill="#EDE0CF"/>
+        <circle cx="700" cy="180" r="160" fill="rgba(139,107,69,0.08)"/>
+        <circle cx="820" cy="300" r="100" fill="rgba(139,107,69,0.06)"/>
+        <circle cx="580" cy="260" r="70" fill="rgba(139,107,69,0.07)"/>
+        <line x1="700" y1="180" x2="820" y2="300" stroke="rgba(139,107,69,0.2)" stroke-width="1.5"/>
+        <line x1="700" y1="180" x2="580" y2="260" stroke="rgba(139,107,69,0.2)" stroke-width="1.5"/>
+        <line x1="820" y1="300" x2="580" y2="260" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+        <circle cx="700" cy="180" r="6" fill="rgba(139,107,69,0.5)"/>
+        <circle cx="820" cy="300" r="6" fill="rgba(139,107,69,0.5)"/>
+        <circle cx="580" cy="260" r="6" fill="rgba(139,107,69,0.5)"/>
+        <text x="60" y="200" font-family="DM Serif Display,serif" font-size="48" fill="rgba(26,25,22,0.12)" font-style="italic">Where sales meets</text>
+        <text x="60" y="260" font-family="DM Serif Display,serif" font-size="48" fill="rgba(26,25,22,0.12)" font-style="italic">intelligence.</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Article content + sidebar -->
+  <div class="article-layout">
+    <article class="article-body">
+      <p>For most industries, a CRM is a CRM. You pick Salesforce or HubSpot, configure a few pipelines, train the team, and move on. But medical device sales is not most industries — and the teams that treat it that way are quietly losing ground to those who don't.</p>
+
+      <p>The problem isn't that generic CRMs are bad tools. They're excellent tools, built for a broad set of commercial contexts. The problem is that medical device sales has a specific set of requirements that generic platforms were never designed to accommodate — and attempting to bolt on that specificity through customisation, workarounds, and third-party integrations creates systems that are expensive to maintain, slow to adopt, and structurally misaligned with how reps actually work.</p>
+
+      <blockquote>
+        <p>"We spent 18 months configuring Salesforce before realising the configuration itself had become the product. Our reps were managing the system instead of managing their territories."</p>
+        <cite>— National Sales Director, Australian orthopaedic device company</cite>
+      </blockquote>
+
+      <h2>What Medical Device Sales Actually Requires</h2>
+
+      <p>To understand why generic CRMs fall short, it helps to understand what makes medical device sales structurally different from, say, enterprise software or financial services sales.</p>
+
+      <h3>The HCP Relationship is Multi-Layered</h3>
+      <p>A medical device rep doesn't just manage a single contact at a hospital — they manage a network of relationships that spans surgeons, theatre nurses, procurement teams, clinical educators, and department heads. Each of these relationships sits at a different point in the influence chain for any given device purchase, and each requires different content, different cadence, and different context.</p>
+
+      <p>Generic CRMs model this as "contacts" and "accounts." Medical device sales requires something closer to a relationship graph — who influences whom, who controls the budget, who has the clinical authority to champion a new device through a hospital's approval process.</p>
+
+      <h3>Territory Coverage is a First-Class Metric</h3>
+      <p>In most B2B sales, territory is a loosely defined concept — a region, a vertical, a segment. In medical device sales, territory management is a surgical discipline. Which hospitals have you visited this month? Which surgeons haven't been seen in 90 days? Which theatre lists are you not yet on?</p>
+
+      <div class="callout">
+        <div class="callout-title">Key finding</div>
+        <p>In our analysis of field data across ConnectRx customers, reps who log visits within 4 hours of the interaction retain 3× more detail accuracy than those who log at end-of-day — and 7× more than weekly recap loggers.</p>
+      </div>
+
+      <p>Generic CRMs have visit logging. They don't have territory intelligence — the ability to surface which parts of your territory are underserved, which relationships are cooling, and which competitive accounts are ripe for a push.</p>
+
+      <h2>The Configuration Trap</h2>
+      <p>The typical response to these gaps is configuration. Salesforce admins build custom objects for HCP relationship types. Custom fields for theatre access. Custom dashboards for territory coverage. Custom reports for management.</p>
+
+      <p>This configuration takes months. It requires ongoing Salesforce expertise — either in-house or via expensive consultants. And critically, it produces a system that looks right in demos but doesn't feel right to reps in the field, because the underlying data model is still a generic CRM trying to impersonate a medical device platform.</p>
+
+      <ul>
+        <li>Adoption suffers when the system doesn't match the mental model of the work</li>
+        <li>Data quality degrades when logging feels like overhead rather than value</li>
+        <li>Management reporting lags because the data coming in is incomplete or inconsistent</li>
+        <li>Compliance risk increases when interaction documentation is unreliable</li>
+      </ul>
+
+      <h2>What the Alternative Looks Like</h2>
+      <p>Purpose-built field intelligence platforms start from the work, not from a generic sales framework. The core data model is built around HCPs, institutions, devices, and interactions — not leads, opportunities, and deals.</p>
+
+      <p>Logging a visit takes seconds, not minutes, because the interface is designed for a rep standing outside a theatre. Territory coverage is a live view, not a report you run on Friday. Management dashboards show what's actually happening in the field, not what reps remembered to enter at end-of-week.</p>
+
+      <div class="article-cta-box">
+        <div class="article-cta-label">See it in action</div>
+        <div class="article-cta-title">GekoPulse is built for exactly this</div>
+        <p class="article-cta-sub">Real-time field intelligence, offline-capable visit logging, and territory dashboards built specifically for medical device sales teams.</p>
+        <a href="index.html#contact" class="article-cta-btn">Book a Demo</a>
+      </div>
+
+      <h2>The Business Case for Switching</h2>
+      <p>The ROI argument for purpose-built tooling in medical device sales is not primarily a cost argument — it's a revenue argument. Teams with higher-quality field intelligence close more deals, maintain better account coverage, and respond faster to competitive threats.</p>
+
+      <p>The configuration and maintenance costs of a generic CRM implementation frequently exceed the cost of a purpose-built platform over a 3-year horizon. But the more compelling number is the revenue impact of better field data — and that's a calculation most companies have never properly run.</p>
+
+      <div class="article-divider"></div>
+
+      <p style="font-size:15px;color:var(--ink-light);font-style:italic;">ConnectRx builds purpose-built sales intelligence platforms for Australian medical device companies. GekoPulse handles field intelligence; GekoConnect handles strategic pipeline management. <a href="index.html#contact" style="color:var(--green);font-weight:600;">Book a demo →</a></p>
+    </article>
+
+    <!-- Sidebar -->
+    <aside class="article-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">In this article</div>
+        <ul class="toc-list">
+          <li class="toc-item"><a href="#">What Medical Device Sales Actually Requires</a></li>
+          <li class="toc-item"><a href="#">The Configuration Trap</a></li>
+          <li class="toc-item"><a href="#">What the Alternative Looks Like</a></li>
+          <li class="toc-item"><a href="#">The Business Case for Switching</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Share</div>
+        <div class="share-row">
+          <button class="share-btn" title="Copy link" onclick="navigator.clipboard.writeText(window.location.href)">
+            <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M9 2h4v4M13 2l-6 6M6 4H3a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1v-3"/></svg>
+          </button>
+          <button class="share-btn" title="Share on LinkedIn">
+            <svg viewBox="0 0 15 15" fill="currentColor"><path d="M2 2h3v11H2zM3.5 1a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM6 6h2.5v1.5S9 6 11 6c2 0 2 1.5 2 3v4h-2.5V9.5c0-.7-.3-1.5-1-1.5s-1.5.8-1.5 1.5V13H6V6z"/></svg>
+          </button>
+          <button class="share-btn" title="Share via email">
+            <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="13" height="9" rx="1.5"/><path d="M1 4l6.5 4.5L14 4"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-label">Related Articles</div>
+        <a href="articles.html">
+          <div class="related-card">
+            <div class="related-tag">Technology</div>
+            <div class="related-title">Field Intelligence in 2026: How Real-Time Data Is Reshaping Territory Management</div>
+          </div>
+        </a>
+        <a href="articles.html">
+          <div class="related-card">
+            <div class="related-tag">Compliance</div>
+            <div class="related-title">The TGA's 2026 Reporting Requirements: What Sales Leaders Need to Know</div>
+          </div>
+        </a>
+        <a href="articles.html">
+          <div class="related-card">
+            <div class="related-tag">Sales Strategy</div>
+            <div class="related-title">Building a Defensible Pipeline: Lessons from High-Growth Device Companies</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- More articles -->
+  <section class="more-articles">
+    <div class="more-articles-head">
+      <h2 class="more-articles-title">More from ConnectRx Insights</h2>
+      <a href="articles.html" class="more-articles-link">
+        View all
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="more-grid">
+      <a href="articles.html">
+        <div class="more-card">
+          <div class="more-card-img img-pattern-2"></div>
+          <div class="more-card-body">
+            <div class="more-card-tag">Compliance</div>
+            <div class="more-card-title">The TGA's 2026 Reporting Requirements: What Sales Leaders Need to Know</div>
+            <div class="more-card-meta">8 min · March 2026</div>
+          </div>
+        </div>
+      </a>
+      <a href="articles.html">
+        <div class="more-card">
+          <div class="more-card-img img-pattern-3"></div>
+          <div class="more-card-body">
+            <div class="more-card-tag">Industry</div>
+            <div class="more-card-title">The Consolidation Wave: What Recent M&A Activity Means for Mid-Size Device Companies</div>
+            <div class="more-card-meta">9 min · January 2026</div>
+          </div>
+        </div>
+      </a>
+      <a href="articles.html">
+        <div class="more-card">
+          <div class="more-card-img img-pattern-4"></div>
+          <div class="more-card-body">
+            <div class="more-card-tag">Sales Strategy</div>
+            <div class="more-card-title">Building a Defensible Pipeline: Lessons from High-Growth Device Companies</div>
+            <div class="more-card-meta">7 min · December 2025</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2026 ConnectRx · connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    .img-pattern-2 { background: linear-gradient(135deg, #D4E4D8 0%, #B8CEBC 100%); }
+    .img-pattern-3 { background: linear-gradient(135deg, #D8D0E4 0%, #BEB4CC 100%); }
+    .img-pattern-4 { background: linear-gradient(135deg, #E4D4CC 0%, #CCB8AC 100%); }
+  </style>
+</body>
+</html>

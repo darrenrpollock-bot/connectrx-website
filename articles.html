@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Articles — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream:        #FAF8F4;
+      --cream-mid:    #F2EDE5;
+      --ink:          #1A1916;
+      --ink-mid:      #3D3B35;
+      --ink-light:    #7A7569;
+      --green:        #8B6B45;
+      --green-light:  #F2EBE0;
+      --border:       rgba(26,25,22,0.10);
+      --border-strong:rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif;
+      --font-ui:   'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Nav ── */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(250,248,244,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-logo-wrap { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); }
+    .nav-links a.active { border-bottom: 1.5px solid var(--green); padding-bottom: 2px; }
+    .nav-cta { padding: 9px 22px; border-radius: 100px; border: 1.5px solid var(--green); font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; background: var(--green); color: #fff; transition: all 0.2s; }
+    .nav-cta:hover { background: #7a5c38; }
+
+    /* ── Page header ── */
+    .page-header { padding: 140px 80px 72px; border-bottom: 1px solid var(--border); }
+    .page-header-inner { max-width: 720px; }
+    .page-label { font-family: var(--font-ui); font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green); margin-bottom: 18px; }
+    .page-title { font-family: var(--font-head); font-size: clamp(36px, 4vw, 58px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 16px; }
+    .page-sub { font-size: 17px; line-height: 1.7; color: var(--ink-light); max-width: 520px; }
+
+    /* ── Filter bar ── */
+    .filter-bar { padding: 24px 80px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-btn { padding: 7px 18px; border-radius: 100px; font-size: 13px; font-weight: 500; font-family: var(--font-body); border: 1.5px solid var(--border-strong); background: transparent; color: var(--ink-mid); cursor: pointer; transition: all 0.18s; }
+    .filter-btn:hover { border-color: var(--green); color: var(--ink); }
+    .filter-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+    /* ── Articles grid ── */
+    .articles-main { padding: 64px 80px 120px; }
+    .articles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+
+    .article-card { display: flex; flex-direction: column; }
+    .article-card.featured { grid-column: span 2; flex-direction: row; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+    .article-card.featured .article-img { width: 52%; flex-shrink: 0; border-radius: 14px; background: var(--cream-mid); min-height: 300px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .article-card.featured .article-body { flex: 1; padding: 8px 0; display: flex; flex-direction: column; justify-content: center; }
+    .article-card.featured .article-title { font-size: 28px; }
+
+    .article-card:not(.featured) .article-img { width: 100%; border-radius: 12px; background: var(--cream-mid); height: 200px; overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .article-card:not(.featured) .article-body { flex: 1; display: flex; flex-direction: column; }
+
+    .article-card.sidebar { padding-left: 32px; border-left: 1px solid var(--border); }
+    .article-card.sidebar .article-img { display: none; }
+
+    .article-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+    .article-title { font-family: var(--font-head); font-size: 20px; font-weight: 400; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 12px; text-wrap: balance; transition: color 0.18s; }
+    .article-card:hover .article-title { color: var(--green); }
+    .article-excerpt { font-size: 14px; line-height: 1.7; color: var(--ink-light); margin-bottom: 20px; flex: 1; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 12.5px; color: var(--ink-light); margin-top: auto; }
+    .article-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.5; display: inline-block; }
+    .article-read-more { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--green); transition: gap 0.18s; margin-top: 12px; }
+    .article-card:hover .article-read-more { gap: 10px; }
+
+    /* ── Newsletter CTA strip ── */
+    .newsletter-strip { background: var(--ink); padding: 72px 80px; display: flex; align-items: center; justify-content: space-between; gap: 48px; flex-wrap: wrap; }
+    .newsletter-copy { max-width: 480px; }
+    .newsletter-title { font-family: var(--font-head); font-size: 30px; font-weight: 400; color: #F0EDE6; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+    .newsletter-sub { font-size: 15px; color: rgba(240,237,230,0.55); line-height: 1.6; }
+    .newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
+    .newsletter-input { padding: 12px 18px; border-radius: 100px; border: 1.5px solid rgba(250,248,244,0.2); background: rgba(250,248,244,0.07); font-family: var(--font-body); font-size: 14px; color: #F0EDE6; outline: none; width: 260px; transition: border-color 0.18s; }
+    .newsletter-input::placeholder { color: rgba(240,237,230,0.35); }
+    .newsletter-input:focus { border-color: var(--green); }
+    .newsletter-btn { padding: 12px 24px; border-radius: 100px; background: var(--green); color: #fff; border: none; font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: background 0.2s; }
+    .newsletter-btn:hover { background: #7a5c38; }
+
+    /* ── Footer ── */
+    footer { background: var(--ink); color: rgba(250,248,244,0.5); padding: 48px 80px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; flex-wrap: wrap; gap: 12px; }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+
+    /* Fade in */
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .page-header { padding: 110px 24px 48px; }
+      .filter-bar { padding: 20px 24px; }
+      .articles-main { padding: 40px 24px 80px; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .article-card.featured { flex-direction: column; grid-column: span 1; }
+      .article-card.featured .article-img { width: 100%; min-height: 220px; }
+      .article-card.sidebar { padding-left: 0; border-left: none; border-top: 1px solid var(--border); padding-top: 32px; }
+      .newsletter-strip { padding: 48px 24px; flex-direction: column; }
+      .newsletter-input { width: 100%; }
+      footer { padding: 36px 24px; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap"><img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx logo" /></div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div>
+      <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner fade-up">
+      <div class="page-label">ConnectRx Insights</div>
+      <h1 class="page-title">Intelligence for<br><em>Complex Sales Teams</em></h1>
+      <p class="page-sub">Sharp thinking on strategic account management, field intelligence, AI in sales, and why the old way of running a commercial team is costing you ground.</p>
+    </div>
+  </header>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterArticles('all', this)">All</button>
+    <button class="filter-btn" onclick="filterArticles('strategy', this)">Sales Strategy</button>
+    <button class="filter-btn" onclick="filterArticles('technology', this)">Technology</button>
+    <button class="filter-btn" onclick="filterArticles('industry', this)">Complex Sales</button>
+  </div>
+
+  <main class="articles-main">
+    <div class="articles-grid" id="articles-grid"></div>
+  </main>
+
+  <div class="newsletter-strip">
+    <div class="newsletter-copy">
+      <h3 class="newsletter-title">Stay ahead of the industry</h3>
+      <p class="newsletter-sub">New articles on complex sales strategy, field intelligence, and commercial execution — delivered to your inbox monthly.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+      <input class="newsletter-input" type="email" placeholder="your@email.com.au" required />
+      <button class="newsletter-btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2026 ConnectRx · connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="#">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="articles-data.js"></script>
+  <script>
+    // ── SVG pattern generators ─────────────────────────────────
+    function patternSVG(type, w, h) {
+      const svg = (inner, bg) =>
+        `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><rect width="${w}" height="${h}" fill="${bg}"/>${inner}<text x="24" y="${h - 14}" font-family="DM Serif Display,serif" font-size="11" fill="rgba(26,25,22,0.2)">ConnectRx Insights</text></svg>`;
+
+      const s = w / 320; // scale factor
+
+      if (type === 'map') {
+        return svg(`
+          <circle cx="${160*s}" cy="${130*s}" r="${72*s}" fill="rgba(139,107,69,0.08)" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+          <circle cx="${300*s}" cy="${110*s}" r="${52*s}" fill="rgba(139,107,69,0.07)" stroke="rgba(139,107,69,0.12)" stroke-width="1"/>
+          <circle cx="${220*s}" cy="${200*s}" r="${38*s}" fill="rgba(139,107,69,0.06)" stroke="rgba(139,107,69,0.10)" stroke-width="1"/>
+          <line x1="${160*s}" y1="${130*s}" x2="${300*s}" y2="${110*s}" stroke="rgba(139,107,69,0.22)" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="${160*s}" y1="${130*s}" x2="${220*s}" y2="${200*s}" stroke="rgba(139,107,69,0.18)" stroke-width="1"/>
+          <line x1="${300*s}" y1="${110*s}" x2="${370*s}" y2="${185*s}" stroke="rgba(139,107,69,0.14)" stroke-width="1"/>
+          <circle cx="${160*s}" cy="${130*s}" r="${7*s}" fill="rgba(139,107,69,0.7)"/>
+          <circle cx="${300*s}" cy="${110*s}" r="${6*s}" fill="rgba(139,107,69,0.6)"/>
+          <circle cx="${220*s}" cy="${200*s}" r="${5*s}" fill="rgba(139,107,69,0.45)"/>
+          <circle cx="${370*s}" cy="${185*s}" r="${4*s}" fill="rgba(139,107,69,0.35)"/>
+          <text x="${168*s}" y="${128*s}" font-family="Inter,sans-serif" font-size="${9*s}" font-weight="600" fill="rgba(139,107,69,0.8)">KOL</text>
+        `, '#EDE0CF');
+      }
+
+      if (type === 'network') {
+        return svg(`
+          <circle cx="${100*s}" cy="${100*s}" r="${10*s}" fill="rgba(139,107,69,0.5)"/>
+          <circle cx="${180*s}" cy="${70*s}" r="${7*s}" fill="rgba(139,107,69,0.35)"/>
+          <circle cx="${240*s}" cy="${120*s}" r="${8*s}" fill="rgba(139,107,69,0.4)"/>
+          <circle cx="${160*s}" cy="${160*s}" r="${6*s}" fill="rgba(139,107,69,0.3)"/>
+          <circle cx="${80*s}" cy="${170*s}" r="${5*s}" fill="rgba(139,107,69,0.25)"/>
+          <circle cx="${280*s}" cy="${80*s}" r="${5*s}" fill="rgba(139,107,69,0.28)"/>
+          <line x1="${100*s}" y1="${100*s}" x2="${180*s}" y2="${70*s}" stroke="rgba(139,107,69,0.2)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          <line x1="${100*s}" y1="${100*s}" x2="${240*s}" y2="${120*s}" stroke="rgba(139,107,69,0.18)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${100*s}" y1="${100*s}" x2="${160*s}" y2="${160*s}" stroke="rgba(139,107,69,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${100*s}" y1="${100*s}" x2="${80*s}" y2="${170*s}" stroke="rgba(139,107,69,0.12)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${180*s}" y1="${70*s}" x2="${280*s}" y2="${80*s}" stroke="rgba(139,107,69,0.14)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${240*s}" y1="${120*s}" x2="${280*s}" y2="${80*s}" stroke="rgba(139,107,69,0.12)" stroke-width="1" stroke-dasharray="3,3"/>
+        `, '#EDE8DF');
+      }
+
+      if (type === 'voice') {
+        return svg(`
+          <line x1="${60*s}" y1="${100*s}" x2="${60*s}" y2="${100*s}" stroke="rgba(74,124,89,0.4)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${76*s}" y1="${82*s}" x2="${76*s}" y2="${118*s}" stroke="rgba(74,124,89,0.5)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${92*s}" y1="${70*s}" x2="${92*s}" y2="${130*s}" stroke="rgba(74,124,89,0.6)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${108*s}" y1="${60*s}" x2="${108*s}" y2="${140*s}" stroke="rgba(74,124,89,0.7)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${124*s}" y1="${75*s}" x2="${124*s}" y2="${125*s}" stroke="rgba(74,124,89,0.65)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${140*s}" y1="${85*s}" x2="${140*s}" y2="${115*s}" stroke="rgba(74,124,89,0.55)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${156*s}" y1="${68*s}" x2="${156*s}" y2="${132*s}" stroke="rgba(74,124,89,0.6)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${172*s}" y1="${80*s}" x2="${172*s}" y2="${120*s}" stroke="rgba(74,124,89,0.5)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <line x1="${188*s}" y1="${90*s}" x2="${188*s}" y2="${110*s}" stroke="rgba(74,124,89,0.4)" stroke-width="${3*s}" stroke-linecap="round"/>
+          <rect x="${210*s}" y="${72*s}" width="${52*s}" height="${56*s}" rx="${6*s}" fill="rgba(74,124,89,0.12)"/>
+          <rect x="${218*s}" y="${82*s}" width="${36*s}" height="${5*s}" rx="${2.5*s}" fill="rgba(74,124,89,0.4)"/>
+          <rect x="${218*s}" y="${92*s}" width="${28*s}" height="${4*s}" rx="${2*s}" fill="rgba(74,124,89,0.25)"/>
+          <rect x="${218*s}" y="${101*s}" width="${32*s}" height="${4*s}" rx="${2*s}" fill="rgba(74,124,89,0.2)"/>
+        `, '#D4E4D8');
+      }
+
+      if (type === 'okr') {
+        const cx = 220*s, cy = 100*s, r = 48*s;
+        return svg(`
+          <circle cx="${40*s}" cy="${100*s}" r="${48*s}" fill="none" stroke="rgba(100,70,160,0.10)" stroke-width="${16*s}"/>
+          <circle cx="${40*s}" cy="${100*s}" r="${48*s}" fill="none" stroke="rgba(100,70,160,0.35)" stroke-width="${16*s}" stroke-dasharray="${2*Math.PI*48*s}" stroke-dashoffset="${2*Math.PI*48*s*0.15}" stroke-linecap="round" transform="rotate(-90 ${40*s} ${100*s})"/>
+          <text x="${40*s}" y="${97*s}" font-family="Syne,sans-serif" font-size="${20*s}" font-weight="800" fill="rgba(100,70,160,0.55)" text-anchor="middle">84%</text>
+          <text x="${40*s}" y="${112*s}" font-family="Inter,sans-serif" font-size="${8*s}" fill="rgba(100,70,160,0.4)" text-anchor="middle">OKR Score</text>
+          <circle cx="${cx}" cy="${60*s}" r="${24*s}" fill="rgba(100,70,160,0.12)" stroke="rgba(100,70,160,0.2)" stroke-width="1"/>
+          <text x="${cx}" y="${67*s}" font-family="Inter,sans-serif" font-size="${16*s}" text-anchor="middle">★</text>
+          <text x="${cx}" y="${78*s}" font-family="Inter,sans-serif" font-size="${7*s}" fill="rgba(100,70,160,0.55)" text-anchor="middle">KOL reached</text>
+          <circle cx="${cx}" cy="${140*s}" r="${24*s}" fill="rgba(100,70,160,0.08)" stroke="rgba(100,70,160,0.14)" stroke-width="1"/>
+          <text x="${cx}" y="${147*s}" font-family="Inter,sans-serif" font-size="${16*s}" text-anchor="middle">✓</text>
+          <text x="${cx}" y="${158*s}" font-family="Inter,sans-serif" font-size="${7*s}" fill="rgba(100,70,160,0.4)" text-anchor="middle">Objective met</text>
+        `, '#D8D0E4');
+      }
+
+      if (type === 'territory') {
+        return svg(`
+          <circle cx="${90*s}" cy="${80*s}" r="${18*s}" fill="rgba(139,107,69,0.15)" stroke="rgba(139,107,69,0.3)" stroke-width="1"/>
+          <circle cx="${90*s}" cy="${80*s}" r="${6*s}" fill="rgba(139,107,69,0.6)"/>
+          <circle cx="${170*s}" cy="${110*s}" r="${24*s}" fill="rgba(139,107,69,0.12)" stroke="rgba(139,107,69,0.25)" stroke-width="1"/>
+          <circle cx="${170*s}" cy="${110*s}" r="${8*s}" fill="rgba(139,107,69,0.55)"/>
+          <circle cx="${240*s}" cy="${70*s}" r="${14*s}" fill="rgba(139,107,69,0.10)" stroke="rgba(139,107,69,0.2)" stroke-width="1"/>
+          <circle cx="${240*s}" cy="${70*s}" r="${5*s}" fill="rgba(139,107,69,0.45)"/>
+          <circle cx="${130*s}" cy="${155*s}" r="${10*s}" fill="rgba(139,107,69,0.08)" stroke="rgba(139,107,69,0.18)" stroke-width="1"/>
+          <circle cx="${130*s}" cy="${155*s}" r="${4*s}" fill="rgba(139,107,69,0.35)"/>
+          <line x1="${90*s}" y1="${80*s}" x2="${170*s}" y2="${110*s}" stroke="rgba(139,107,69,0.2)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${170*s}" y1="${110*s}" x2="${240*s}" y2="${70*s}" stroke="rgba(139,107,69,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="${170*s}" y1="${110*s}" x2="${130*s}" y2="${155*s}" stroke="rgba(139,107,69,0.15)" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="${96*s}" y="${79*s}" font-family="Inter,sans-serif" font-size="${8*s}" fill="rgba(139,107,69,0.7)">High</text>
+          <text x="${176*s}" y="${109*s}" font-family="Inter,sans-serif" font-size="${8*s}" fill="rgba(139,107,69,0.7)">KOL</text>
+        `, '#E4D4CC');
+      }
+
+      // default / new articles
+      const hue = (type.charCodeAt(0) * 37) % 360;
+      return svg(`
+        <rect x="${40*s}" y="${60*s}" width="${80*s}" height="${80*s}" rx="${8*s}" fill="rgba(139,107,69,0.08)" stroke="rgba(139,107,69,0.15)" stroke-width="1"/>
+        <rect x="${60*s}" y="${80*s}" width="${40*s}" height="${6*s}" rx="${3*s}" fill="rgba(139,107,69,0.3)"/>
+        <rect x="${60*s}" y="${92*s}" width="${55*s}" height="${4*s}" rx="${2*s}" fill="rgba(139,107,69,0.18)"/>
+        <rect x="${60*s}" y="${102*s}" width="${45*s}" height="${4*s}" rx="${2*s}" fill="rgba(139,107,69,0.14)"/>
+        <rect x="${60*s}" y="${112*s}" width="${30*s}" height="${8*s}" rx="${4*s}" fill="rgba(139,107,69,0.28)"/>
+        <circle cx="${220*s}" cy="${100*s}" r="${40*s}" fill="rgba(139,107,69,0.06)" stroke="rgba(139,107,69,0.12)" stroke-width="1.5"/>
+        <circle cx="${220*s}" cy="${100*s}" r="${25*s}" fill="rgba(139,107,69,0.04)" stroke="rgba(139,107,69,0.08)" stroke-width="1"/>
+      `, '#EDE8DF');
+    }
+
+    // ── Render articles ────────────────────────────────────────
+    function arrowSVG() {
+      return `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+
+    function renderGrid(articles) {
+      const grid = document.getElementById('articles-grid');
+      grid.innerHTML = '';
+
+      articles.forEach((a, i) => {
+        const el = document.createElement('article');
+        el.className = 'article-card fade-up' + (i === 0 ? ' featured' : i === 1 ? ' sidebar' : '');
+        el.dataset.category = a.category;
+        el.style.transitionDelay = (i * 0.05) + 's';
+
+        const isFeatured = i === 0;
+        const isSidebar = i === 1;
+        const imgW = isFeatured ? 480 : 320;
+        const imgH = isFeatured ? 300 : 200;
+
+        const imgHtml = isSidebar ? '' : `
+          <div class="article-img">
+            ${patternSVG(a.patternType || 'default', imgW, imgH)}
+          </div>`;
+
+        el.innerHTML = `
+          ${imgHtml}
+          <div class="article-body">
+            <div class="article-tag">${a.tag}</div>
+            <h2 class="article-title">${a.title}</h2>
+            <p class="article-excerpt">${a.excerpt}</p>
+            <div class="article-meta">
+              ${isFeatured ? `<span>ConnectRx Editorial</span><span class="article-meta-dot"></span>` : ''}
+              <span>${a.readTime}</span>
+              <span class="article-meta-dot"></span>
+              <span>${a.date}</span>
+            </div>
+            <a href="${a.file}" class="article-read-more">
+              Read article ${arrowSVG()}
+            </a>
+          </div>`;
+
+        grid.appendChild(el);
+      });
+
+      // trigger fade-up
+      setTimeout(() => {
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+        document.querySelectorAll('.page-header .fade-up').forEach(el => el.classList.add('visible'));
+      }, 80);
+    }
+
+    function filterArticles(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filtered = cat === 'all' ? window.ARTICLES_DATA : window.ARTICLES_DATA.filter(a => a.category === cat);
+      renderGrid(filtered);
+    }
+
+    async function handleNewsletter(e) {
+      e.preventDefault();
+      const form = e.target;
+      const btn = form.querySelector('.newsletter-btn');
+      const email = form.querySelector('input[type="email"]').value;
+      btn.textContent = 'Subscribing…';
+      btn.disabled = true;
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            access_key: 'baca7ad1-6d7e-486d-af71-9c229d0d4e28',
+            subject: 'New Newsletter Subscriber — ConnectRx',
+            from_name: 'ConnectRx Website',
+            Email: email,
+            botcheck: '',
+          }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          btn.textContent = 'Subscribed!';
+          btn.style.background = '#5a4528';
+        } else {
+          throw new Error('Submission failed');
+        }
+      } catch {
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+        btn.style.background = '';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGrid(window.ARTICLES_DATA);
+      setTimeout(() => document.querySelectorAll('.page-header .fade-up').forEach(el => el.classList.add('visible')), 80);
+    });
+  </script>
+</body>
+</html>

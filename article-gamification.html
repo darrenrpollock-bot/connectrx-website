@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Gamification in Complex Sales Isn't Gimmicky — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-light: #F2EBE0;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif; --font-ui: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(250,248,244,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-logo-wrap { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+    .nav-logo-img { width: 34px; height: 34px; object-fit: contain; mix-blend-mode: multiply; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--ink-mid); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a.active { color: var(--ink); border-bottom: 1.5px solid var(--green); padding-bottom: 2px; }
+    .nav-cta { padding: 9px 22px; border-radius: 100px; border: none; font-size: 13.5px; font-weight: 600; font-family: var(--font-body); cursor: pointer; background: var(--green); color: #fff; transition: background 0.2s; }
+    .nav-cta:hover { background: #7a5c38; }
+    .article-header { padding: 130px 80px 48px; max-width: 1100px; margin: 0 auto; }
+    .back-link { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--ink-light); margin-bottom: 32px; transition: color 0.18s; }
+    .back-link:hover { color: var(--ink); }
+    .article-tag { font-family: var(--font-ui); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+    .article-title { font-family: var(--font-head); font-size: clamp(32px, 4vw, 54px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 24px; text-wrap: balance; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--ink-light); padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+    .article-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+    .article-hero { margin: 0 auto; max-width: 1100px; padding: 0 80px 56px; }
+    .article-hero-img { width: 100%; border-radius: 16px; overflow: hidden; }
+    .article-body-wrap { max-width: 720px; margin: 0 auto; padding: 0 80px 100px; }
+    .article-body p { font-size: 17px; line-height: 1.8; color: var(--ink-mid); margin-bottom: 24px; }
+    .article-body h2 { font-family: var(--font-head); font-size: 28px; font-weight: 400; line-height: 1.2; color: var(--ink); margin: 48px 0 16px; letter-spacing: -0.01em; }
+    .article-body ul { margin: 0 0 24px 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .article-body ul li { padding-left: 20px; position: relative; font-size: 17px; line-height: 1.75; color: var(--ink-mid); }
+    .article-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--green); font-weight: 300; }
+    .article-pullquote { border-left: 3px solid var(--green); padding: 4px 0 4px 28px; margin: 40px 0; }
+    .article-pullquote p { font-family: var(--font-head); font-size: 24px; line-height: 1.45; color: var(--ink); font-weight: 400; margin: 0; }
+    .article-cta-strip { background: var(--ink); border-radius: 16px; padding: 48px; margin: 56px 0 0; display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+    .article-cta-strip h3 { font-family: var(--font-head); font-size: 26px; color: #F0EDE6; font-weight: 400; line-height: 1.25; }
+    .article-cta-strip p { font-size: 14px; color: rgba(240,237,230,0.55); margin-top: 8px; line-height: 1.6; }
+    .btn-demo { padding: 14px 28px; border-radius: 100px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; font-family: var(--font-body); border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .btn-demo:hover { background: #7a5c38; }
+    footer { background: var(--ink); color: rgba(250,248,244,0.5); padding: 36px 80px; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; flex-wrap: wrap; gap: 12px; }
+    .footer-links-row { display: flex; gap: 24px; }
+    .footer-links-row a { color: rgba(250,248,244,0.45); transition: color 0.2s; font-size: 13px; }
+    .footer-links-row a:hover { color: rgba(250,248,244,0.85); }
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; } .nav-links { display: none; }
+      .article-header, .article-hero, .article-body-wrap { padding-left: 24px; padding-right: 24px; }
+      footer { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-wrap"><img class="nav-logo-img" src="uploads/GekoLogoBrown.png" alt="ConnectRx"/></div>
+      ConnectRx
+    </div>
+    <div class="nav-links">
+      <a href="index.html">Our Platforms</a>
+      <a href="index.html#features">Why ConnectRx</a>
+      <a href="articles.html" class="active">Articles</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <button class="nav-cta" onclick="window.location='index.html#contact'">Book a Demo</button>
+  </nav>
+
+  <div class="article-header">
+    <a href="articles.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M7 3l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Articles
+    </a>
+    <div class="article-tag">Complex Sales</div>
+    <h1 class="article-title">Why Gamification in Complex Sales Isn't Gimmicky — It's Neuroscience</h1>
+    <div class="article-meta">
+      <span>ConnectRx Editorial</span>
+      <span class="article-meta-dot"></span>
+      <span>9 min read</span>
+      <span class="article-meta-dot"></span>
+      <span>January 2026</span>
+    </div>
+  </div>
+
+  <div class="article-hero">
+    <div class="article-hero-img">
+      <svg viewBox="0 0 1020 380" width="100%" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <rect width="1020" height="380" fill="#E0D8EC"/>
+        <!-- Progress ring -->
+        <circle cx="300" cy="190" r="120" fill="none" stroke="rgba(100,70,160,0.10)" stroke-width="16"/>
+        <circle cx="300" cy="190" r="120" fill="none" stroke="rgba(100,70,160,0.35)" stroke-width="16" stroke-dasharray="678" stroke-dashoffset="100" stroke-linecap="round" transform="rotate(-90 300 190)"/>
+        <circle cx="300" cy="190" r="85" fill="rgba(100,70,160,0.06)"/>
+        <text x="300" y="180" font-family="Syne,sans-serif" font-size="42" font-weight="800" fill="rgba(100,70,160,0.6)" text-anchor="middle">84%</text>
+        <text x="300" y="205" font-family="Inter,sans-serif" font-size="13" fill="rgba(100,70,160,0.45)" text-anchor="middle">OKR Score</text>
+        <!-- Small achievement badges -->
+        <circle cx="490" cy="130" r="28" fill="rgba(100,70,160,0.12)" stroke="rgba(100,70,160,0.2)" stroke-width="1"/>
+        <text x="490" y="136" font-family="Inter,sans-serif" font-size="18" text-anchor="middle">★</text>
+        <text x="490" y="152" font-family="Inter,sans-serif" font-size="9" fill="rgba(100,70,160,0.6)" text-anchor="middle">KOL reached</text>
+        <circle cx="590" cy="190" r="28" fill="rgba(100,70,160,0.10)" stroke="rgba(100,70,160,0.16)" stroke-width="1"/>
+        <text x="590" y="196" font-family="Inter,sans-serif" font-size="18" text-anchor="middle">↑</text>
+        <text x="590" y="212" font-family="Inter,sans-serif" font-size="9" fill="rgba(100,70,160,0.5)" text-anchor="middle">Tier upgraded</text>
+        <circle cx="490" cy="260" r="28" fill="rgba(100,70,160,0.08)" stroke="rgba(100,70,160,0.14)" stroke-width="1"/>
+        <text x="490" y="266" font-family="Inter,sans-serif" font-size="18" text-anchor="middle">✓</text>
+        <text x="490" y="282" font-family="Inter,sans-serif" font-size="9" fill="rgba(100,70,160,0.45)" text-anchor="middle">Objective met</text>
+        <!-- Right: colour psychology swatches -->
+        <rect x="700" y="120" width="200" height="140" rx="12" fill="rgba(100,70,160,0.06)" stroke="rgba(100,70,160,0.12)" stroke-width="1"/>
+        <rect x="718" y="138" width="20" height="20" rx="4" fill="#E53935"/>
+        <rect x="718" y="165" width="20" height="20" rx="4" fill="#F59F00"/>
+        <rect x="718" y="192" width="20" height="20" rx="4" fill="#4CAF50"/>
+        <rect x="718" y="219" width="20" height="20" rx="4" fill="rgba(100,70,160,0.5)"/>
+        <text x="746" y="153" font-family="Inter,sans-serif" font-size="10" fill="rgba(100,70,160,0.6)">At risk</text>
+        <text x="746" y="180" font-family="Inter,sans-serif" font-size="10" fill="rgba(100,70,160,0.6)">In progress</text>
+        <text x="746" y="207" font-family="Inter,sans-serif" font-size="10" fill="rgba(100,70,160,0.6)">On track</text>
+        <text x="746" y="234" font-family="Inter,sans-serif" font-size="10" fill="rgba(100,70,160,0.6)">Achieved</text>
+        <text x="40" y="355" font-family="DM Serif Display,serif" font-size="14" fill="rgba(100,70,160,0.35)">ConnectRx Insights</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="article-body-wrap">
+    <div class="article-body">
+
+      <p>When we describe GekoConnect as a gamified platform, we sometimes notice a slight hesitation in the room. Gamification has a reputation problem — it conjures images of badges, leaderboards, and superficial point-scoring mechanics bolted onto enterprise software by a product team that ran out of real ideas.</p>
+
+      <p>That scepticism is understandable. The gamification of the 2010s was largely cosmetic. Trivial incentive loops applied to fundamentally unrewarding tasks don't make those tasks rewarding — they just make them slightly less tedious for a few weeks before the novelty wears off entirely.</p>
+
+      <p>But there is a meaningful distinction between gamification as decoration and gamification as design — between superficial engagement mechanics and a platform built from the ground up around what we actually know about how human beings respond to goals, progress, and visible achievement.</p>
+
+      <div class="article-pullquote">
+        <p>"The problem with most sales tools isn't that reps don't understand what to do. It's that the tools give them no reason to feel good about doing it."</p>
+      </div>
+
+      <h2>The Neuroscience of Progress</h2>
+
+      <p>When a person makes visible progress toward a meaningful goal, their brain releases dopamine. This is not a metaphor — it's a measurable neurochemical event that makes the pursuit of further progress feel intrinsically rewarding. This is the foundation of what psychologists call intrinsic motivation: the drive to continue an activity because the activity itself is satisfying, rather than because of an external reward.</p>
+
+      <p>Most enterprise software is designed in a way that systematically suppresses this response. Data entry, form completion, stage updates — these are tasks with no visible progress indicator, no meaningful goal structure, and no feedback loop that tells the user they're doing well. The experience is administratively functional and emotionally dead.</p>
+
+      <p>A well-designed gamified system reverses this. Not by adding leaderboards or unlocking virtual trophies — but by making progress visible, making goals meaningful and achievable at multiple timescales, and providing genuine feedback that the user is moving forward.</p>
+
+      <h2>The Psychology of Colour</h2>
+
+      <p>Colour is not cosmetic in a tool like GekoConnect. It's information — and it's information that the brain processes faster and with less cognitive load than text. An account card that shifts from amber to green as a relationship strengthens communicates something instantly that a status field change doesn't.</p>
+
+      <p>Research in environmental psychology consistently shows that colour-coded information improves both processing speed and decision quality. When a rep looks at their territory map and sees — at a glance — which accounts are at risk, which are progressing, and which have been neglected, they're receiving strategic information in the most cognitively accessible format available.</p>
+
+      <p>This matters especially in a mobile-first context. A rep in a hospital waiting room has thirty seconds to review their account before the meeting. They can read colour faster than they can read text. The colour is the strategy, made instantly legible.</p>
+
+      <h2>OKRs as an Engagement Framework</h2>
+
+      <p>The OKR (Objectives and Key Results) framework has become the dominant goal-setting methodology at high-performing technology companies for a reason: it aligns individual effort to organisational direction, makes progress measurable, and operates at a cadence that keeps goals relevant rather than stale.</p>
+
+      <p>Applied to complex, relationship-driven sales, the same logic holds. When a rep has a clear objective for each key account — aligned to the company's broader commercial strategy, visible in the platform, and broken into actionable tactics — the work of selling becomes structured rather than reactive. They know what they're trying to achieve. They can see how close they are. They can feel the progress.</p>
+
+      <ul>
+        <li>Company-level objectives are preloaded into the system — reps start with strategic context, not a blank slate</li>
+        <li>Local objectives can be added by the rep for their specific territory dynamics</li>
+        <li>Tactics are associated with each objective — so the rep always knows the next action</li>
+        <li>OKR scores update dynamically as actions are completed — the progress is always visible</li>
+      </ul>
+
+      <h2>The Engagement Differentiator</h2>
+
+      <p>The commercial case for an engaging tool is, ultimately, a data quality case. CRM data quality is directly correlated with user adoption — and user adoption is directly correlated with how the tool feels to use. A tool that people use willingly and frequently generates clean, timely, complete data. A tool that people use under duress generates inconsistent, delayed, and strategically useless data.</p>
+
+      <p>Complex sales organisations have largely accepted poor CRM data quality as a fact of life. It isn't. It's a consequence of building tools that are designed around administrative compliance rather than around human psychology.</p>
+
+      <p>GekoConnect was designed to be the tool that reps actually want to open. Not because it's simpler or prettier — though both matter — but because it's built around a model of work that makes progress feel real and strategy feel achievable. That's not a feature. That's a design philosophy.</p>
+
+      <p>And it turns out, design philosophy drives adoption. Adoption drives data quality. Data quality drives better decisions. Better decisions drive better outcomes.</p>
+
+      <p>Which is what everyone wanted from the CRM in the first place.</p>
+
+    </div>
+
+    <div class="article-cta-strip">
+      <div>
+        <h3>See how GekoConnect makes strategy feel as good as it looks.</h3>
+        <p>Book a demo and we'll walk you through the OKR framework, colour psychology and gamification mechanics in action.</p>
+      </div>
+      <button class="btn-demo" onclick="window.location='index.html#contact'">Book a Demo</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom">
+      <span>© 2026 ConnectRx · connectrx.com.au</span>
+      <div class="footer-links-row">
+        <a href="index.html">Home</a>
+        <a href="articles.html">Articles</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

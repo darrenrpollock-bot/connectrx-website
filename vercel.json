@@ -1,0 +1,19 @@
+{
+  "headers": [
+    {
+      "source": "/admin.html",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    }
+  ],
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "routes": [
+    {
+      "src": "/pdf-render.html",
+      "status": 404,
+      "dest": "/404"
+    }
+  ]
+}

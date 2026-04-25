@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Demo — ConnectRx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Serif+Display&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #FAF8F4; --cream-mid: #F2EDE5;
+      --ink: #1A1916; --ink-mid: #3D3B35; --ink-light: #7A7569;
+      --green: #8B6B45; --green-dark: #7a5c38;
+      --border: rgba(26,25,22,0.10); --border-strong: rgba(26,25,22,0.18);
+      --font-head: 'DM Serif Display', serif;
+      --font-ui: 'Syne', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      padding: 32px 24px 48px;
+      min-height: 100vh;
+    }
+
+    .form-header { margin-bottom: 28px; }
+    .form-eyebrow {
+      font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 8px;
+    }
+    .form-title {
+      font-family: var(--font-head); font-size: 26px; font-weight: 400;
+      color: var(--ink); line-height: 1.2; letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .form-sub { font-size: 13.5px; color: var(--ink-light); line-height: 1.6; }
+
+    .demo-form { display: flex; flex-direction: column; gap: 18px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--ink-mid); letter-spacing: 0.02em; }
+    .req { color: var(--green); }
+    .form-input {
+      padding: 10px 13px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 8px;
+      font-family: var(--font-body); font-size: 14px;
+      color: var(--ink); background: #fff; outline: none;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      width: 100%;
+    }
+    .form-input::placeholder { color: var(--ink-light); }
+    .form-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(139,107,69,0.12);
+      background: #fff;
+    }
+    textarea.form-input { min-height: 84px; resize: vertical; }
+    .form-check-group { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 2px; }
+    .form-check {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13.5px; color: var(--ink-mid); cursor: pointer;
+    }
+    .form-check input[type="checkbox"] {
+      width: 15px; height: 15px;
+      accent-color: var(--green); cursor: pointer;
+    }
+    .form-submit {
+      width: 100%; padding: 13px;
+      background: var(--green); color: #fff;
+      border: none; border-radius: 8px;
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.18s, transform 0.18s;
+      margin-top: 4px;
+    }
+    .form-submit:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .form-submit:disabled { opacity: 0.65; transform: none; cursor: default; }
+    .form-fine { text-align: center; font-size: 12px; color: var(--ink-light); margin-top: -4px; }
+
+    /* Success */
+    .form-success {
+      display: none; flex-direction: column; align-items: center;
+      text-align: center; padding: 40px 20px; gap: 12px;
+    }
+    .form-success-icon { margin-bottom: 8px; }
+    .form-success-title {
+      font-family: var(--font-head); font-size: 26px; font-weight: 400;
+      color: var(--ink); letter-spacing: -0.01em;
+    }
+    .form-success-sub { font-size: 14px; color: var(--ink-light); line-height: 1.65; max-width: 300px; }
+    .form-success-email { font-size: 13px; color: var(--ink-light); margin-top: 4px; }
+
+    /* Error banner */
+    .form-error {
+      display: none; padding: 12px 16px; border-radius: 8px;
+      background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.2);
+      font-size: 13px; color: #c0392b; line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .form-row { grid-template-columns: 1fr; }
+      body { padding: 24px 16px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-header">
+    <div class="form-eyebrow" id="form-eyebrow">Book a Demo</div>
+    <h1 class="form-title" id="form-title">See it in action</h1>
+    <p class="form-sub" id="form-sub">Fill in your details and our team will be in touch within one business day to set up your demo.</p>
+  </div>
+
+  <div id="form-error" class="form-error"></div>
+
+  <form class="demo-form" id="demo-form" onsubmit="handleSubmit(event)" novalidate>
+    <!-- Web3Forms access key — replace with your API key from web3forms.com -->
+    <input type="hidden" name="access_key" id="access-key" value="baca7ad1-6d7e-486d-af71-9c229d0d4e28" />
+    <!-- Honeypot spam prevention — do not remove -->
+    <input type="checkbox" name="botcheck" style="display:none;" />
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="f-name">Full Name <span class="req">*</span></label>
+        <input class="form-input" id="f-name" name="Full Name" type="text" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-company">Company <span class="req">*</span></label>
+        <input class="form-input" id="f-company" name="Company" type="text" placeholder="Acme Medical" required />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="f-email">Work Email <span class="req">*</span></label>
+        <input class="form-input" id="f-email" name="Email" type="email" placeholder="jane@acmemedical.com.au" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="f-phone">Phone</label>
+        <input class="form-input" id="f-phone" name="Phone" type="tel" placeholder="+61 4xx xxx xxx" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">I'm interested in</label>
+      <div class="form-check-group">
+        <label class="form-check"><input type="checkbox" id="chk-pulse" name="interest" value="GekoPulse" /><span>GekoPulse</span></label>
+        <label class="form-check"><input type="checkbox" id="chk-connect" name="interest" value="GekoConnect" /><span>GekoConnect</span></label>
+        <label class="form-check"><input type="checkbox" id="chk-both" name="interest" value="Full platform demo" /><span>Full platform demo</span></label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="f-msg">Anything you'd like us to know?</label>
+      <textarea class="form-input" id="f-msg" name="Message" placeholder="Team size, current tools, goals…" rows="3"></textarea>
+    </div>
+    <button type="submit" class="form-submit" id="form-btn">Book My Demo</button>
+    <p class="form-fine">We'll be in touch within one business day.</p>
+  </form>
+
+  <div class="form-success" id="form-success">
+    <div class="form-success-icon">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" fill="#F2EBE0"/>
+        <path d="M14 24l7 7 13-14" stroke="#8B6B45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="form-success-title">You're all set!</h2>
+    <p class="form-success-sub">Thanks — our team will reach out within one business day to confirm your demo time.</p>
+    <p class="form-success-email">📧 enquire@connectrx.com.au</p>
+  </div>
+
+  <script>
+    // ── Read ?product= param to customise the form ──────────────
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get('product'); // 'GekoPulse' | 'GekoConnect' | null
+
+    if (product === 'GekoPulse') {
+      document.getElementById('form-eyebrow').textContent = 'GekoPulse Demo';
+      document.getElementById('form-title').textContent = 'See GekoPulse in action';
+      document.getElementById('form-sub').textContent = 'Fill in your details and our team will be in touch within one business day to set up your GekoPulse demo.';
+      document.getElementById('chk-pulse').checked = true;
+    } else if (product === 'GekoConnect') {
+      document.getElementById('form-eyebrow').textContent = 'GekoConnect Demo';
+      document.getElementById('form-title').textContent = 'See GekoConnect in action';
+      document.getElementById('form-sub').textContent = 'Fill in your details and our team will be in touch within one business day to set up your GekoConnect demo.';
+      document.getElementById('chk-connect').checked = true;
+    } else {
+      // Default: both checked
+      document.getElementById('chk-pulse').checked = true;
+      document.getElementById('chk-connect').checked = true;
+    }
+
+    // ── Form submission ──────────────────────────────────────────
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('form-btn');
+      const errEl = document.getElementById('form-error');
+      errEl.style.display = 'none';
+
+      // Basic validation
+      const name = document.getElementById('f-name').value.trim();
+      const company = document.getElementById('f-company').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      if (!name || !company || !email) {
+        errEl.textContent = 'Please fill in all required fields.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+
+      const interests = [...document.querySelectorAll('input[name="interest"]:checked')]
+        .map(el => el.value).join(', ') || 'Not specified';
+
+      const productLabel = product ? ` — ${product}` : '';
+
+      const payload = {
+        access_key: document.getElementById('access-key').value,
+        subject: `New Demo Request${productLabel} — ${name}`,
+        from_name: 'ConnectRx Website',
+        replyto: email,
+        "Full Name": name,
+        "Company": company,
+        "Email": email,
+        "Phone": document.getElementById('f-phone').value || 'Not provided',
+        "Interested In": interests,
+        "Message": document.getElementById('f-msg').value || 'No message',
+        "botcheck": "",
+      };
+
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('demo-form').style.display = 'none';
+          document.getElementById('form-success').style.display = 'flex';
+          // Notify parent iframe if embedded
+          if (window.parent !== window) {
+            window.parent.postMessage({ type: 'formSuccess', product: product }, '*');
+          }
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        errEl.textContent = 'Something went wrong. Please try again or email us directly at enquire@connectrx.com.au';
+        errEl.style.display = 'block';
+        btn.textContent = 'Book My Demo';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
