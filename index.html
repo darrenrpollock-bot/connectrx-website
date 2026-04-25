@@ -133,15 +133,13 @@
     .footer-logo-wrap {
       width: 36px; height: 36px;
       border-radius: 8px;
-      background: #EDE8DF;
+      background: transparent;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden; flex-shrink: 0;
-      padding: 3px;
     }
     .footer-logo-img {
-      width: 30px; height: 30px;
+      width: 36px; height: 36px;
       object-fit: contain;
-      mix-blend-mode: multiply;
     }
 
     .nav-links { display: flex; align-items: center; gap: 32px; }
@@ -686,7 +684,6 @@
     .footer-logo-img {
       width: 36px; height: 36px;
       object-fit: contain;
-      mix-blend-mode: screen;
     }
     .footer-desc {
       font-size: 13.5px; line-height: 1.7;
@@ -1285,7 +1282,7 @@
     function setLogo(colour) {
       currentLogo = colour;
       document.getElementById('nav-logo-img').src = LOGOS[colour];
-      document.getElementById('footer-logo-img').src = LOGOS[colour];
+      // Footer is always on dark background — keep white logo
       ['brown','blue','green','black'].forEach(c => {
         const btn = document.getElementById('tw-logo-' + c);
         if (btn) btn.classList.toggle('active', c === colour);
