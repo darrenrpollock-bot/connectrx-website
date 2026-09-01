@@ -5,6 +5,18 @@
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]
+    },
+    {
+      "source": "/demo-form.html",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" }
+      ]
     }
   ],
   "cleanUrls": false,
