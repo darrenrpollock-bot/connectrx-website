@@ -35,7 +35,7 @@ window.ARTICLES_DATA = [
     tag: "Technology",
     category: "technology",
     title: "Voice-First Field Capture: Why the Future of CRM Input Isn’t Typing",
-    excerpt: "A rep finishes a call with a surgeon who just flagged a competitor’s new pricing. They have four more visits today. The note never gets written. Voice-first capture — with AI that summarises, categorises and routes in real time — solves the problem that every other tool has ignored.",
+    excerpt: "A sales professional finishes a call with a surgeon who just flagged a competitor’s new pricing. They have four more visits today. The note never gets written. Voice-first capture — with AI that summarises, categorises and routes in real time — solves the problem that every other tool has ignored.",
     readTime: "6 min read",
     date: "February 2026",
     patternType: "voice"
@@ -57,7 +57,7 @@ window.ARTICLES_DATA = [
     tag: "Complex Sales",
     category: "industry",
     title: "Why Gamifying Field Intelligence Capture Isn’t Gimmicky — It’s Neuroscience",
-    excerpt: "XP, levels and streaks sound like decoration bolted onto enterprise software. But the reason reps stop logging intelligence after a fortnight is neurological, not attitudinal — and the fix is the same behavioural science that makes progress feel rewarding.",
+    excerpt: "XP, levels and streaks sound like decoration bolted onto enterprise software. But the reason teams stop logging intelligence after a fortnight is neurological, not attitudinal — and the fix is the same behavioural science that makes progress feel rewarding.",
     readTime: "9 min read",
     date: "January 2026",
     patternType: "okr"
