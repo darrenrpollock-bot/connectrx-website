@@ -151,6 +151,7 @@
          --ink     deep brown-black  all headings + body text
          --ink-2   dark brown        secondary text (still high contrast)
          --accent  clay (ONLY accent) labels, links, buttons, key numbers
+         --green*  soft green, used ONLY inside the GekoPulse (#platform) section
 
        TYPE SCALE (Urbanist only — each role has ONE size + weight)
          Role      Size            Weight  Line   Use
@@ -172,6 +173,11 @@
       --ink-2:    #4B4137;
       --accent:   #A3441F;
       --line:     rgba(31,26,20,0.16);
+
+      /* GekoPulse section only: soft green hints */
+      --green-soft: #EEF5F0;   /* tinted background */
+      --green-mid:  #BFD8C8;   /* hairlines + frames */
+      --green:      #2F6B47;   /* tiny text/marker hints (dark enough to read) */
 
       --font: 'Urbanist', 'Helvetica Neue', Arial, sans-serif;
 
@@ -437,6 +443,32 @@
     .footer-article-meta { font-size: var(--fs-small); font-weight: 500; color: var(--ink-2); }
     .footer-bottom { border-top: 1px solid var(--line); padding-top: 24px; display: flex; justify-content: space-between; gap: 16px; color: var(--ink-2); }
 
+
+    /* ── GekoPulse section: soft green hints, more modern ── */
+    .platform-section { background: var(--green-soft); }
+    .platform-section .section-label { color: var(--green); }
+    .platform-section .section-title { letter-spacing: -0.035em; }
+    .platform-section .shot { border-color: var(--green); background: #fff; }
+    .platform-section .shot-bar { background: #fff; border-bottom-color: var(--green-mid); color: var(--green); }
+    .platform-section .shot-bar span:first-child::before { content: ''; display: inline-block; width: 8px; height: 8px; background: var(--green); margin-right: 10px; }
+    .platform-section .shot figcaption { border-top-color: var(--green-mid); background: #fff; }
+    .platform > .shot { position: sticky; top: 104px; }
+    .platform-section .platform-copy .app-card-title { font-size: var(--fs-h3); }
+    .platform-section .app-card-features { counter-reset: gp; border-top-color: var(--green-mid); }
+    .platform-section .app-card-features li {
+      counter-increment: gp; padding-left: 52px; border-bottom-color: var(--green-mid);
+      transition: background 0.18s, padding-left 0.18s;
+    }
+    .platform-section .app-card-features li::before {
+      content: counter(gp, decimal-leading-zero); background: none; width: auto; height: auto; top: 21px;
+      font-size: var(--fs-small); font-weight: 700; color: var(--green);
+    }
+    .platform-section .app-card-features li:hover { background: #fff; padding-left: 60px; }
+    .platform-section .platform-foot span { color: var(--green); }
+    .platform-section .nav-cta.filled { background: var(--green); border-color: var(--green); }
+    .platform-section .nav-cta.filled:hover { background: var(--ink); border-color: var(--ink); }
+    @media (max-width: 960px) { .platform > .shot { position: static; } }
+
     /* ── Fade-in (subtle) ── */
     .fade-up { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .fade-up.visible { opacity: 1; transform: none; }
@@ -537,7 +569,7 @@
   <div class="divider"></div>
 
   <!-- GekoPulse Platform -->
-  <section class="apps" id="platform">
+  <section class="apps platform-section" id="platform">
     <div class="section-head fade-up">
       <div class="section-label">The Platform</div>
       <h2 class="section-title">GekoPulse closes the gap.</h2>
