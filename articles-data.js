@@ -1,9 +1,8 @@
 // ─────────────────────────────────────────────────────────────
 //  ConnectRx Articles Data
 //  To add a new article:
-//    1. Use admin.html to generate the article HTML file
-//    2. Upload the generated file to the project
-//    3. Add a new entry to this array (admin.html does this for you)
+//    1. Create the article HTML file
+//    2. Add a new entry to this array
 // ─────────────────────────────────────────────────────────────
 
 window.ARTICLES_DATA = [
