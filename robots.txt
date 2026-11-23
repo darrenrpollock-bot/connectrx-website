@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
-Disallow: /demo-form.html
+
 Disallow: /pdf-render.html
 
 # AI search / answer engines

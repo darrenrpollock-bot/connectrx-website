@@ -1,18 +1,6 @@
 {
   "headers": [
     {
-      "source": "/admin.html",
-      "headers": [
-        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
-      ]
-    },
-    {
-      "source": "/demo-form.html",
-      "headers": [
-        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
-      ]
-    },
-    {
       "source": "/sitemap.xml",
       "headers": [
         { "key": "Content-Type", "value": "application/xml" }
@@ -21,6 +9,38 @@
   ],
   "cleanUrls": false,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/onboarding.html",
+      "destination": "https://www.gekopulse.com",
+      "permanent": true
+    },
+    {
+      "source": "/onboarding",
+      "destination": "https://www.gekopulse.com",
+      "permanent": true
+    },
+    {
+      "source": "/demo-form.html",
+      "destination": "https://www.gekopulse.com",
+      "permanent": true
+    },
+    {
+      "source": "/demo-form",
+      "destination": "https://www.gekopulse.com",
+      "permanent": true
+    },
+    {
+      "source": "/admin.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/admin",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "routes": [
     {
       "src": "/pdf-render.html",
