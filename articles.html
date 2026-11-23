@@ -103,10 +103,6 @@
     .newsletter-copy { max-width: 480px; }
     .newsletter-title { font-family: var(--font-head); font-size: 30px; font-weight: 400; color: #F0EDE6; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
     .newsletter-sub { font-size: 15px; color: rgba(240,237,230,0.55); line-height: 1.6; }
-    .newsletter-form { display: flex; gap: 10px; flex-wrap: wrap; }
-    .newsletter-input { padding: 12px 18px; border-radius: 100px; border: 1.5px solid rgba(250,248,244,0.2); background: rgba(250,248,244,0.07); font-family: var(--font-body); font-size: 14px; color: #F0EDE6; outline: none; width: 260px; transition: border-color 0.18s; }
-    .newsletter-input::placeholder { color: rgba(240,237,230,0.35); }
-    .newsletter-input:focus { border-color: var(--green); }
     .newsletter-btn { padding: 12px 24px; border-radius: 100px; background: var(--green); color: #fff; border: none; font-size: 14px; font-weight: 600; font-family: var(--font-body); cursor: pointer; transition: background 0.2s; }
     .newsletter-btn:hover { background: #7a5c38; }
 
@@ -132,7 +128,6 @@
       .article-card.featured .article-img { width: 100%; min-height: 220px; }
       .article-card.sidebar { padding-left: 0; border-left: none; border-top: 1px solid var(--border); padding-top: 32px; }
       .newsletter-strip { padding: 48px 24px; flex-direction: column; }
-      .newsletter-input { width: 100%; }
       footer { padding: 36px 24px; }
       .footer-bottom { flex-direction: column; align-items: flex-start; }
     }
@@ -195,11 +190,6 @@
       <p class="newsletter-sub">Product details and enquiries live on gekopulse.com.</p>
     </div>
     <a class="newsletter-btn" href="https://www.gekopulse.com" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;">Visit GekoPulse</a>
-  </div>
-<form class="newsletter-form" onsubmit="handleNewsletter(event)">
-      <input class="newsletter-input" type="email" placeholder="your@email.com.au" required />
-      <button class="newsletter-btn" type="submit">Subscribe</button>
-    </form>
   </div>
 
   <footer class="site-footer">
