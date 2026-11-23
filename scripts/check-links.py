@@ -62,12 +62,11 @@ for rel in [
     if not (ROOT / rel).exists():
         errors.append(f"missing required file {rel}")
 
-# Global forbidden strings in site code (privacy draft may mention Web3Forms in legal text)
+# Global forbidden strings in site HTML
+forbidden = ("web3" + "forms", "GekoBrown", "admin.html")
 for html_path in HTML_FILES:
-    if html_path.name == "privacy.html":
-        continue
     text = html_path.read_text(encoding="utf-8", errors="replace")
-    for bad in ("web3forms", "GekoBrown", "admin.html"):
+    for bad in forbidden:
         if bad.lower() in text.lower():
             errors.append(f"{html_path.name}: contains forbidden string {bad!r}")
 
